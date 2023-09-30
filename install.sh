@@ -192,7 +192,7 @@ then
 fi
 
 #######################################
-# Create /etc/fpp directory and contents
+# Create /etc/sign directory and contents
 echo "SIGN - Creating /etc/sign and contents"
 mkdir /etc/sign
 echo "${SIGNPLATFORM}" > /etc/sign/platform
@@ -241,6 +241,14 @@ http://\4 , http://\n.local , or http://\n
 EOF
 cp /etc/issue.new /etc/issue
 rm /etc/issue.new
+
+
+#######################################
+echo "SIGN - Setting US keyboard layout and locale"
+sed -i 's/^\(en_GB.UTF-8\)/# \1/;s/..\(en_AU.UTF-8\)/\1/' /etc/locale.gen
+sed -i "s/XKBLAYOUT=".*"/XKBLAYOUT="us"/" /etc/default/keyboard
+echo "LANG=en_AU.UTF-8" > /etc/default/locale
+
 # end of if desktop
 fi
 
@@ -270,31 +278,16 @@ apt-get -y clean
 rm -f /etc/pkcs11/modules/gnome-keyring-module
 
 echo "SIGN - Installing required packages"
-# Install 10 packages, then clean to lower total disk space required
   
-PHPVER=""
-ACTUAL_PHPVER="7.4"
-if [ "${OSVER}" == "ubuntu_22.04" -o "${OSVER}" == "linuxmint_21" ]; then
-    PHPVER="7.4"
-    echo "FPP - Forceing PHP 7.4"
-    apt install software-properties-common apt-transport-https -y
-    add-apt-repository ppa:ondrej/php -y
-    apt-get -y update
-    apt-get -y upgrade
-fi
-if [ "${OSVER}" == "ubuntu_22.10" ]; then
-    ACTUAL_PHPVER="8.1"
-fi
-
 $PACKAGES="mc python3-dev python3-pip python3-mysql.connector python3-flask python3-sqlalchemy shellinabox sudo git"
 
-apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install $PACKAGES
-#apt-get install $PACKAGES -y
+#apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install $PACKAGES
+apt-get install $PACKAGES -y
 echo "SIGN - Cleaning up after installing packages"
 apt-get -y clean
 
 echo "SIGN - Installing PIP Modules"
-sudo pip install Flask python-gsmmodem pyftpdlib
+pip install Flask python-gsmmodem pyftpdlib
 
 echo "SIGN - Configuring shellinabox to use /var/tmp"
 echo "SHELLINABOX_DATADIR=/var/tmp/" >> /etc/default/shellinabox
@@ -313,9 +306,6 @@ sed -e 's/rootwait/rootwait net.ifnames=0 biosdevname=0/' /boot/cmdline.txt
 echo "SIGN - Disabling Swap to save SD card"
 systemctl disable dphys-swapfile          
 
-echo "SIGN - Setting locale"
-sed -i 's/^\(en_GB.UTF-8\)/# \1/;s/..\(en_AU.UTF-8\)/\1/' /etc/locale.gen
-locale-gen en_AU.UTF-8
 dpkg-reconfigure --frontend=noninteractive locales
 export LANG=en_AU.UTF-8
             
@@ -348,7 +338,19 @@ chmod 700 ${SIGNHOME}/.ssh
 
 mkdir ${SIGNHOME}/logs
 chown 755 ${SIGNHOME}/logs
+
+echo >> ${SIGNHOME}/.bashrc
+echo ". /opt/sign/scripts/common" >> ${SIGNHOME}/.bashrc
+echo >> ${SIGNHOME}/.bashrc
+
 #######################################
+# Configure log rotation
+echo "SIGN - Configuring log rotation"
+cp /opt/sign/etc/logrotate.d/* /etc/logrotate.d/
+sed -i -e "s/#compress/compress/" /etc/logrotate.conf
+sed -i -e "s/rotate .*/rotate 2/" /etc/logrotate.conf
+#######################################
+
 echo "SIGN - Creating System Service"
 
 cat <<-EOF >> /etc/systemd/system/sign.service 
@@ -371,6 +373,7 @@ EOF
     
 systemctl enable sign.service
 systemctl start sign.service
+
 #######################################
 #echo "SIGN - Giving ${SIGNUSER} user sudo"
 #echo "${SIGNUSER} ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
