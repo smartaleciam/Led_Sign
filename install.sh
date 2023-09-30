@@ -350,7 +350,7 @@ chown 755 ${SIGNHOME}/logs
 #######################################
 echo "SIGN - Creating System Service"
 
-cat >> /etc/systemd/system/sign.service <<EOF
+cat <<-EOF >> /etc/systemd/system/sign.service 
 
 [Unit]
 Description=Sign Control System
@@ -376,7 +376,8 @@ systemctl start sign.service
 
 #######################################
 # Print notice during login regarding console access
-cat <<-EOF >> /etc/motd 
+
+cat >> /etc/motd <<EOF 
 [0;31m
                   [0mLED Sign Controller[0;31m
 [1m
@@ -386,7 +387,7 @@ you aren't one of those, you're probably looking for the web-based GUI.
 You can access the UI by typing "http://sign.local/" into a web browser.[0m
 EOF
 
-    #######################################
+#######################################
 ENDTIME=$(date)
 
 echo "========================================================="
