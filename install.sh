@@ -348,8 +348,7 @@ sed -i -e "s/#compress/compress/" /etc/logrotate.conf
 sed -i -e "s/rotate .*/rotate 2/" /etc/logrotate.conf
 #######################################
 echo "SIGN - Creating System Service"
-cat >> /etc/systemd/system/sign.service <<EOF 
-
+cat >> /etc/systemd/system/sign.service <<EOF
 [Unit]
 Description=Sign Control System
 After=network.target
@@ -363,12 +362,10 @@ ExecStart=/usr/bin/python3 /opt/sign/app.py
 
 [Install]
 WantedBy=multi-user.target
-  
 EOF
-    
-	systemctl enable sign.service
-	systemctl start sign.service
 
+systemctl enable sign.service
+systemctl start sign.service
 #######################################
 #echo "SIGN - Giving ${SIGNUSER} user sudo"
 #echo "${SIGNUSER} ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
