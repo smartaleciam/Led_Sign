@@ -8,7 +8,9 @@
 
 
 Using the SIM7600G-M 4G Modem Hat on a Raspberry Pi
+
 Must have the ability to 
+
 1. Send GPS location,
 2. Read the Current Battery Voltage/Amps,
 3. Read Data from Solar Controller,
