@@ -351,7 +351,7 @@ sed -i -e "s/rotate .*/rotate 2/" /etc/logrotate.conf
 
 echo "SIGN - Creating System Service"
 
-cat <<-EOF >> /etc/systemd/system/sign.service 
+cat >> /etc/systemd/system/sign.service <<EOF 
 
 [Unit]
 Description=Sign Control System
@@ -388,7 +388,7 @@ you aren't one of those, you're probably looking for the web-based GUI.
 You can access the UI by typing "http://sign.local/" into a web browser.[0m
 EOF
 #######################################
-cat <<-EOF >> /etc/ppp/peers/gprs/ppp.txt
+cat >> /etc/ppp/peers/gprs/ppp.txt <<EOF 
 /dev/ttyUSB2
 115200
 connect "/usr/sbin/chat -v -f /etc/chatscripts/gprs"
@@ -399,7 +399,7 @@ replacedefaultroute
 hide-password
 EOF
 #######################################
-cat <<-EOF >> /etc/chatscripts/gprs.txt
+cat >> /etc/chatscripts/gprs.txt <<EOF 
  ABORT "BUSY"
 ABORT "NO CARRIER"
 ABORT "VOICE"
