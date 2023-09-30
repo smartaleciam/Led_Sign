@@ -241,6 +241,8 @@ http://\4 , http://\n.local , or http://\n
 EOF
 cp /etc/issue.new /etc/issue
 rm /etc/issue.new
+# end of if desktop
+fi
 
 #######################################
 # Make sure /opt exists
