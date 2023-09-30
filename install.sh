@@ -284,27 +284,27 @@ cd /opt 2> /dev/null || mkdir /opt
 #echo "SIGN - Cleaning up after installing packages"
 #apt-get -y clean
 
-echo "SIGN - Installing PIP Modules"
-pip3 install Flask python-gsmmodem pyftpdlib
+#echo "SIGN - Installing PIP Modules"
+#pip3 install Flask python-gsmmodem pyftpdlib
 
-echo "SIGN - Configuring shellinabox to use /var/tmp"
-echo "SHELLINABOX_DATADIR=/var/tmp/" >> /etc/default/shellinabox
-sed -i -e "s/SHELLINABOX_ARGS.*/SHELLINABOX_ARGS=\"--no-beep -t\"/" /etc/default/shellinabox
+#echo "SIGN - Configuring shellinabox to use /var/tmp"
+#echo "SHELLINABOX_DATADIR=/var/tmp/" >> /etc/default/shellinabox
+#sed -i -e "s/SHELLINABOX_ARGS.*/SHELLINABOX_ARGS=\"--no-beep -t\"/" /etc/default/shellinabox
 
-echo "SIGN - Disabling the VC4 OpenGL driver"
-sed -i -e "s/dtoverlay=vc4-fkms-v3d/#dtoverlay=vc4-fkms-v3d/" /boot/config.txt
-sed -i -e "s/dtoverlay=vc4-kms-v3d/#dtoverlay=vc4-kms-v3d/" /boot/config.txt
+#echo "SIGN - Disabling the VC4 OpenGL driver"
+#sed -i -e "s/dtoverlay=vc4-fkms-v3d/#dtoverlay=vc4-fkms-v3d/" /boot/config.txt
+#sed -i -e "s/dtoverlay=vc4-kms-v3d/#dtoverlay=vc4-kms-v3d/" /boot/config.txt
             
-echo "SIGN - Disabling Camera AutoDetect"
-sed -i -e "s/camera_auto_detect/#camera_auto_detect/" /boot/config.txt
+#echo "SIGN - Disabling Camera AutoDetect"
+#sed -i -e "s/camera_auto_detect/#camera_auto_detect/" /boot/config.txt
 
-echo "SIGN - Disabling fancy network interface names"
-sed -e 's/rootwait/rootwait net.ifnames=0 biosdevname=0/' /boot/cmdline.txt
+#echo "SIGN - Disabling fancy network interface names"
+@sed -e 's/rootwait/rootwait net.ifnames=0 biosdevname=0/' /boot/cmdline.txt
 
-echo "SIGN - Disabling Swap to save SD card"
-systemctl disable dphys-swapfile          
+@echo "SIGN - Disabling Swap to save SD card"
+@systemctl disable dphys-swapfile          
 
-dpkg-reconfigure --frontend=noninteractive locales
+@dpkg-reconfigure --frontend=noninteractive locales
             
 #######################################
 # Clone git repository
@@ -320,7 +320,7 @@ if $clone_sign; then
     fi
 
     echo "SIGN - Cloning git repository into /opt/sign"
-    git clone https://smartaleciam:69meBitchy@github.com/smartalecim/Led_Sign.git sign
+    git clone https://smartaleciam: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@github.com/smartalecim/Led_Sign.git sign
     cd sign
     git config pull.rebase true
 fi
