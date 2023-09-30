@@ -149,15 +149,15 @@ echo "============================================================"
 
 echo ""
 echo "Notes:"
-echo "- Does this system have internet access to install packages and FPP?"
+echo "- Does this system have internet access to install packages?"
 echo ""
 echo "WARNINGS:"
 echo "- This install expects to be run on a clean freshly-installed system."
 echo "  The script is not currently designed to be re-run multiple times."
 if $isimage; then
-    echo "- This installer will take over your system.  It will disable any"
-    echo "  existing 'pi' or 'debian' user and create a '${FPPUSER}' user.  If the system"
-    echo "  has an empty root password, remote root login will be disabled."
+    echo "- This installer will take over your system." 
+#    echo "  It will disable any existing 'pi' or 'debian' user and create a '${FPPUSER}' user.  If the system"
+#    echo "  has an empty root password, remote root login will be disabled."
 fi
 echo ""
 
