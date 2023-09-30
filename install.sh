@@ -2,10 +2,10 @@
 
 # Led Trailer Sign Install Script
 SIGNBRANCH=${SIGNBRANCH:-"master"}
-SIGNIMAGEVER="2023-10-05"
+SIGNIMAGEVER="2023-10-07"
 SIGNCFGVER="1"
 SIGNPLATFORM="UNKNOWN"
-SIGNDIR=/opt/ledsign
+SIGNDIR=/opt/sign
 SIGNUSER=smartalec/sign
 SIGNHOME=/home/${SIGNUSER}
 OSVER="UNKNOWN"
@@ -278,11 +278,11 @@ cd /opt 2> /dev/null || mkdir /opt
 # when trying to do a git pull
 #rm -f /etc/pkcs11/modules/gnome-keyring-module
 
-#echo "SIGN - Installing required packages"
-#apt-get install mc python3-dev python3-pip python3-flask shellinabox sudo git -y
+echo "SIGN - Installing required packages"
+apt-get install mc python3-dev python3-pip python3-flask shellinabox sudo git python3-mysql.connector ppp -y
 
-#echo "SIGN - Cleaning up after installing packages"
-#apt-get -y clean
+echo "SIGN - Cleaning up after installing packages"
+apt-get -y clean
 
 #echo "SIGN - Installing PIP Modules"
 #pip3 install Flask python-gsmmodem pyftpdlib
@@ -363,7 +363,7 @@ ExecStart=/usr/bin/python3 /opt/sign/app.py
 [Install]
 WantedBy=multi-user.target
 EOF
-
+echo "SIGN - Enabling System Service"
 systemctl enable sign.service
 systemctl start sign.service
 #######################################
