@@ -1,4 +1,4 @@
-# Led_Sign
+<b># Led_Sign</b>
 Led Mobile Sign Trailer Control Software
 
 Using the SIM7600G-M 4G Modem Hat on a Raspberry Pi
@@ -11,7 +11,7 @@ Must have the ability to
 <br>
 <img src="https://github.com/smartaleciam/Led_Sign/blob/main/sign_trailer.png" align="left" height="100" width="100">
 <br>
-##### Currently in Development #####
+<b>##### Currently in Development #####</b>
 
 wget https://raw.githubusercontent.com/smartaleciam/Led_Sign/main/install.sh
 chmod -R 744 install_.sh
