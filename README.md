@@ -1,6 +1,7 @@
 # Led_Sign
+<img src="https://github.com/smartaleciam/Led_Sign/blob/main/sign_trailer.png" align="left" height="100" width="100">
 
-Led Mobile Sign Trailer Control Software
+#Led Mobile Sign Trailer Control Software
 
 Using the SIM7600G-M 4G Modem Hat on a Raspberry Pi
 Must have the ability to 
@@ -10,9 +11,7 @@ Must have the ability to
 4. Ability to Upload / Download via FTP
 5. Turn On / Off all Panels
 6. Ability to accept / display a live IP stream
-7. Upload Display Templates - Update scores Etc.
-   
-<img src="https://github.com/smartaleciam/Led_Sign/blob/main/sign_trailer.png" align="left" height="100" width="100">
+7. Upload Display Templates - Update scores Etc.  
 
 # #### Currently in Development #####
 
