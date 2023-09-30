@@ -376,15 +376,14 @@ systemctl start sign.service
 
 #######################################
 # Print notice during login regarding console access
-cat >> /etc/motd <<EOF 
-
-                  LED Sign Controller
-
+cat <<->> /etc/motd 
+[0;31m
+                  [0mLED Sign Controller[0;31m
+[1m
 This SIGN console is for advanced users, debugging, and developers.  If
 you aren't one of those, you're probably looking for the web-based GUI.
 
-You can access the UI by typing "http://sign.local/" into a web browser.
-
+You can access the UI by typing "http://sign.local/" into a web browser.[0m
 EOF
 
     #######################################
