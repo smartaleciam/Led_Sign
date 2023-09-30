@@ -376,7 +376,7 @@ systemctl start sign.service
 
 #######################################
 # Print notice during login regarding console access
-cat <<->> /etc/motd 
+cat <<-EOF >> /etc/motd 
 [0;31m
                   [0mLED Sign Controller[0;31m
 [1m
