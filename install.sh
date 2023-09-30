@@ -2,7 +2,7 @@
 
 # Led Trailer Sign Install Script
 SIGNBRANCH=${SIGNBRANCH:-"master"}
-SIGNIMAGEVER="2023-10-01"
+SIGNIMAGEVER="2023-10-02"
 SIGNCFGVER="1"
 SIGNPLATFORM="UNKNOWN"
 SIGNDIR=/opt/ledsign
@@ -244,10 +244,10 @@ rm /etc/issue.new
 
 
 #######################################
-echo "SIGN - Setting US keyboard layout and locale"
-sed -i 's/^\(en_GB.UTF-8\)/# \1/;s/..\(en_AU.UTF-8\)/\1/' /etc/locale.gen
-sed -i "s/XKBLAYOUT=".*"/XKBLAYOUT="us"/" /etc/default/keyboard
-echo "LANG=en_AU.UTF-8" > /etc/default/locale
+#echo "SIGN - Setting US keyboard layout and locale"
+#sed -i 's/^\(en_GB.UTF-8\)/# \1/;s/..\(en_AU.UTF-8\)/\1/' /etc/locale.gen
+#sed -i "s/XKBLAYOUT=".*"/XKBLAYOUT="us"/" /etc/default/keyboard
+#echo "LANG=en_AU.UTF-8" > /etc/default/locale
 
 # end of if desktop
 fi
@@ -260,29 +260,28 @@ cd /opt 2> /dev/null || mkdir /opt
 
 #######################################
 
-echo "SIGN - Updating package list"
-apt-get update
-echo "SIGN - Upgrading apt if necessary"
-apt-get install --only-upgrade apt
-echo "SIGN - Sleeping 5 seconds to make sure any apt upgrade is quiesced"
-sleep 5
-echo "SIGN - Upgrading other installed packages"
-apt-get -y upgrade
-echo "SIGN - Cleanup caches"
-apt-get -y clean
-apt-get -y --purge autoremove
-
-apt-get -y clean
+#echo "SIGN - Updating package list"
+#apt-get update
+#echo "SIGN - Upgrading apt if necessary"
+#apt-get install --only-upgrade apt
+#echo "SIGN - Sleeping 5 seconds to make sure any apt upgrade is quiesced"
+#sleep 5
+#echo "SIGN - Upgrading other installed packages"
+#apt-get -y upgrade
+#echo "SIGN - Cleanup caches"
+#apt-get -y clean
+#apt-get -y --purge autoremove
+#apt-get -y clean
 
 # remove gnome keyring module config which causes pkcs11 warnings
 # when trying to do a git pull
-rm -f /etc/pkcs11/modules/gnome-keyring-module
+#rm -f /etc/pkcs11/modules/gnome-keyring-module
 
-echo "SIGN - Installing required packages"
-apt-get install mc python3-dev python3-pip python3-flask shellinabox sudo git -y
+#echo "SIGN - Installing required packages"
+#apt-get install mc python3-dev python3-pip python3-flask shellinabox sudo git -y
 
-echo "SIGN - Cleaning up after installing packages"
-apt-get -y clean
+#echo "SIGN - Cleaning up after installing packages"
+#apt-get -y clean
 
 echo "SIGN - Installing PIP Modules"
 pip3 install Flask python-gsmmodem pyftpdlib
@@ -321,7 +320,7 @@ if $clone_sign; then
     fi
 
     echo "SIGN - Cloning git repository into /opt/sign"
-    git clone https://github.com/smartalecim/Led_Sign.git sign
+    git clone https://smartaleciam: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@github.com/smartalecim/Led_Sign.git sign
     cd sign
     git config pull.rebase true
 fi
