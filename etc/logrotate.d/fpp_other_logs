@@ -1,0 +1,12 @@
+/home/fpp/media/logs/[b-zA-Z]*.log
+{
+	su fpp fpp
+	daily
+	size 10M
+	missingok
+	rotate 7
+	compress
+	delaycompress
+	notifempty
+	sharedscripts
+}
