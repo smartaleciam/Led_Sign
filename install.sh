@@ -340,8 +340,8 @@ echo >> ${SIGNHOME}.bashrc
 echo ". /opt/sign/scripts/common" >> ${SIGNHOME}.bashrc
 echo >> ${SIGNHOME}.bashrc
 
-    if [ -e "/opt/sign" ]
-    then
+if [ -e "/opt/sign" ]
+then
 	#######################################
 	# Configure log rotation
 	echo "SIGN - Configuring log rotation"
