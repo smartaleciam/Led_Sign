@@ -286,7 +286,7 @@ fi
 
 $PACKAGES="mc python3-dev python3-pip python3-mysql.connector python3-flask python3-sqlalchemy shellinabox sudo"
 
-apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install ${PACKAGE_LIST}
+apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install $PACKAGES}
 #apt-get install $PACKAGES -y
 echo "SIGN - Cleaning up after installing packages"
 apt-get -y clean
@@ -336,9 +336,8 @@ if $clone_sign; then
     git config pull.rebase true
 fi
 git config --global pull.rebase true
-git config --global --add safe.directory /opt/fpp
+git config --global --add safe.directory /opt/sign
 
-#######################################
 #######################################
 echo "SIGN - Populating ${SIGNHOME}"
 mkdir ${SIGNHOME}/.ssh
@@ -376,7 +375,6 @@ systemctl start sign.service
 
 #######################################
 # Print notice during login regarding console access
-
 cat <<-EOF >> /etc/motd
 [0;31m
                   [0mLED Sign Controller[0;31m
@@ -385,6 +383,33 @@ This SIGN console is for advanced users, debugging, and developers.  If
 you aren't one of those, you're probably looking for the web-based GUI.
 
 You can access the UI by typing "http://sign.local/" into a web browser.[0m
+EOF
+#######################################
+cat <<-EOF >> /etc/ppp/peers/gprs/ppp.txt
+/dev/ttyUSB2
+115200
+connect "/usr/sbin/chat -v -f /etc/chatscripts/gprs"
+noipdefault
+usepeerdns
+defaultroute
+replacedefaultroute
+hide-password
+EOF
+#######################################
+cat <<-EOF >> /etc/chatscripts/gprs.txt
+ ABORT "BUSY"
+ABORT "NO CARRIER"
+ABORT "VOICE"
+ABORT "NO DIALTONE"
+ABORT "NO DIAL TONE"
+ABORT "NO ANSWER"
+ABORT "DELAYED"
+TIMEOUT 30
+"" "AT"
+OK "ATE0"
+OK "AT+CGDCONT=1,\"IP\",\"your_apn_here\""
+OK "ATD*99#"
+CONNECT ""
 EOF
 
 #######################################
@@ -413,35 +438,5 @@ echo ""
 
 cp /root/SIGN_Install.* ${SIGNHOME}/
 chown sign.sign ${SIGNHOME}/SIGN_Install.*
-
-#######################################
-cat <<-EOF >> /etc/ppp/peers/gprs/ppp.txt
-/dev/ttyUSB2
-115200
-connect "/usr/sbin/chat -v -f /etc/chatscripts/gprs"
-noipdefault
-usepeerdns
-defaultroute
-replacedefaultroute
-hide-password
-EOF
-#######################################
-cat <<-EOF >> /etc/chatscripts/gprs.txt
- 
-ABORT "BUSY"
-ABORT "NO CARRIER"
-ABORT "VOICE"
-ABORT "NO DIALTONE"
-ABORT "NO DIAL TONE"
-ABORT "NO ANSWER"
-ABORT "DELAYED"
-TIMEOUT 30
-"" "AT"
-OK "ATE0"
-OK "AT+CGDCONT=1,\"IP\",\"your_apn_here\""
-OK "ATD*99#"
-CONNECT ""
-EOF
-#######################################
 
 #sudo apt install ufw
