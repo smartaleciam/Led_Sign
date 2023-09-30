@@ -14,6 +14,8 @@ Must have the ability to
 <br>
 <b>##### Currently in Development #####</b>
 <br><br><br>
+```
 wget https://raw.githubusercontent.com/smartaleciam/Led_Sign/main/install.sh<br>
 chmod -R 744 install_.sh<br>
 sudo ./install.sh
+```
