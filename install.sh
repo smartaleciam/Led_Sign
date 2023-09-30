@@ -7,7 +7,7 @@ SIGNCFGVER="1"
 SIGNPLATFORM="UNKNOWN"
 SIGNDIR=/opt/ledsign
 SIGNUSER=SIGN
-SIGNHOME=/home/${FPPUSER}
+SIGNHOME=/home/${SIGNUSER}
 OSVER="UNKNOWN"
 
 # Make sure the sbin directories are on the path as we will
