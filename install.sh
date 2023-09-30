@@ -2,11 +2,11 @@
 
 # Led Trailer Sign Install Script
 SIGNBRANCH=${SIGNBRANCH:-"master"}
-SIGNIMAGEVER="2023-10-02"
+SIGNIMAGEVER="2023-10-04"
 SIGNCFGVER="1"
 SIGNPLATFORM="UNKNOWN"
 SIGNDIR=/opt/ledsign
-SIGNUSER=SIGN
+SIGNUSER=smartalec/sign
 SIGNHOME=/home/${SIGNUSER}
 OSVER="UNKNOWN"
 
@@ -340,17 +340,15 @@ echo >> ${SIGNHOME}/.bashrc
 echo ". /opt/sign/scripts/common" >> ${SIGNHOME}/.bashrc
 echo >> ${SIGNHOME}/.bashrc
 
-if [ -e "/opt/sign" ]
-then
-	#######################################
-	# Configure log rotation
-	echo "SIGN - Configuring log rotation"
-	cp /opt/sign/etc/logrotate.d/* /etc/logrotate.d/
-	sed -i -e "s/#compress/compress/" /etc/logrotate.conf
-	sed -i -e "s/rotate .*/rotate 2/" /etc/logrotate.conf
-	#######################################
-	echo "SIGN - Creating System Service"
-	cat >> /etc/systemd/system/sign.service <<EOF 
+#######################################
+# Configure log rotation
+echo "SIGN - Configuring log rotation"
+cp /opt/sign/etc/logrotate.d/* /etc/logrotate.d/
+sed -i -e "s/#compress/compress/" /etc/logrotate.conf
+sed -i -e "s/rotate .*/rotate 2/" /etc/logrotate.conf
+#######################################
+echo "SIGN - Creating System Service"
+cat >> /etc/systemd/system/sign.service <<EOF 
 
 [Unit]
 Description=Sign Control System
@@ -370,7 +368,7 @@ EOF
     
 	systemctl enable sign.service
 	systemctl start sign.service
-fi
+
 #######################################
 #echo "SIGN - Giving ${SIGNUSER} user sudo"
 #echo "${SIGNUSER} ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
