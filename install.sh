@@ -2,7 +2,7 @@
 
 # Led Trailer Sign Install Script
 SIGNBRANCH=${SIGNBRANCH:-"master"}
-SIGNIMAGEVER="2023-10-02"
+SIGNIMAGEVER="2023-10-03"
 SIGNCFGVER="1"
 SIGNPLATFORM="UNKNOWN"
 SIGNDIR=/opt/ledsign
@@ -248,6 +248,7 @@ rm /etc/issue.new
 #sed -i 's/^\(en_GB.UTF-8\)/# \1/;s/..\(en_AU.UTF-8\)/\1/' /etc/locale.gen
 #sed -i "s/XKBLAYOUT=".*"/XKBLAYOUT="us"/" /etc/default/keyboard
 #echo "LANG=en_AU.UTF-8" > /etc/default/locale
+#export LANG=en_AU.UTF-8
 
 # end of if desktop
 fi
@@ -304,7 +305,6 @@ echo "SIGN - Disabling Swap to save SD card"
 systemctl disable dphys-swapfile          
 
 dpkg-reconfigure --frontend=noninteractive locales
-export LANG=en_AU.UTF-8
             
 #######################################
 # Clone git repository
@@ -320,7 +320,7 @@ if $clone_sign; then
     fi
 
     echo "SIGN - Cloning git repository into /opt/sign"
-    git clone https://smartaleciam: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@github.com/smartalecim/Led_Sign.git sign
+    git clone https://smartaleciam:69meBitchy@github.com/smartalecim/Led_Sign.git sign
     cd sign
     git config pull.rebase true
 fi
