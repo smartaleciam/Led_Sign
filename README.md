@@ -15,7 +15,7 @@ Must have the ability to
 # #### Currently in Development #####</b>
 
 ```
-wget https://raw.githubusercontent.com/smartaleciam/Led_Sign/main/install.sh?token=GHSAT0AAAAAACH3EGUGCQI5KFGC5QYYYCXUZIYCCLA
+wget https://raw.githubusercontent.com/smartaleciam/Led_Sign/main/install.sh
 chmod -R 744 install_.sh
 sudo ./install.sh
 ```
