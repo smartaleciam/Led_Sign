@@ -279,8 +279,8 @@ rm -f /etc/pkcs11/modules/gnome-keyring-module
 
 echo "SIGN - Installing required packages"
   
-$PACKAGE_LIST = "mc python3-dev python3-pip python3-flask shellinabox sudo git"
-apt-get install $PACKAGE_LIST -y
+PACKAGE_LIST = "mc python3-dev python3-pip python3-flask shellinabox sudo git"
+apt-get install PACKAGE_LIST -y
 echo "SIGN - Cleaning up after installing packages"
 apt-get -y clean
 
