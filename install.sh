@@ -260,8 +260,8 @@ cd /opt 2> /dev/null || mkdir /opt
 
 #######################################
 
-echo "SIGN - Updating package list"
-apt-get update
+#echo "SIGN - Updating package list"
+#apt-get update
 #echo "SIGN - Upgrading apt if necessary"
 #apt-get install --only-upgrade apt
 #echo "SIGN - Sleeping 5 seconds to make sure any apt upgrade is quiesced"
