@@ -321,7 +321,7 @@ if $clone_sign; then
     fi
 
     echo "SIGN - Cloning git repository into /opt/sign"
-    git clone https://ghp_M3uv0mipj7y1Plm37q6F7H3ymAkKjc2zeKd@github.com/smartalecim/Led_Sign sign
+    git clone https://github.com/smartalecim/Led_Sign.git sign
     cd sign
     git config pull.rebase true
 fi
