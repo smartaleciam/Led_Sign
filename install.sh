@@ -279,9 +279,26 @@ rm -f /etc/pkcs11/modules/gnome-keyring-module
 
 echo "SIGN - Installing required packages"
   
-PACKAGES="mc python3-dev python3-pip python3-mysql.connector python3-flask python3-sqlalchemy shellinabox sudo git"
+PACKAGE_LIST="mc python3-dev python3-pip python3-mysql.connector python3-flask python3-sqlalchemy shellinabox sudo git"
 
-apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install ${PACKAGES}
+if [ "$FPPPLATFORM" == "Raspberry Pi" -o "$FPPPLATFORM" == "BeagleBone Black" ]; then
+    	PACKAGE_LIST="$PACKAGE_LIST firmware-realtek firmware-atheros firmware-ralink firmware-brcm80211 firmware-iwlwifi firmware-libertas firmware-zd1211 firmware-ti-connectivity zram-tools"
+else
+    	PACKAGE_LIST="$PACKAGE_LIST ccache"
+fi
+
+if [ "$FPPPLATFORM" != "BeagleBone Black" ]; then
+        PACKAGE_LIST="$PACKAGE_LIST libva-dev"
+fi
+
+if $isimage; then
+	PACKAGE_LIST="$PACKAGE_LIST networkd-dispatcher"
+fi
+if $skip_apt_install; then
+    	PACKAGE_LIST=""
+else
+    apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install ${PACKAGE_LIST}
+fi
 #apt-get install $PACKAGES -y
 echo "SIGN - Cleaning up after installing packages"
 apt-get -y clean
