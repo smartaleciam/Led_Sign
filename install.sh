@@ -2,7 +2,7 @@
 
 # Led Trailer Sign Install Script
 SIGNBRANCH=${SIGNBRANCH:-"master"}
-SIGNIMAGEVER="2023-10-07"
+SIGNIMAGEVER="2023-10-06"
 SIGNCFGVER="1"
 SIGNPLATFORM="UNKNOWN"
 SIGNDIR=/opt/sign
@@ -279,7 +279,7 @@ cd /opt 2> /dev/null || mkdir /opt
 #rm -f /etc/pkcs11/modules/gnome-keyring-module
 
 echo "SIGN - Installing required packages"
-apt-get install mc python3-dev python3-pip python3-flask shellinabox sudo git python3-mysql.connector ppp -y
+apt-get install mc python3-dev python3-pip python3-flask shellinabox sudo git python3-mysql ppp -y
 
 echo "SIGN - Cleaning up after installing packages"
 apt-get -y clean
