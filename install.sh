@@ -262,16 +262,16 @@ cd /opt 2> /dev/null || mkdir /opt
 
 echo "SIGN - Updating package list"
 apt-get update
-echo "SIGN - Upgrading apt if necessary"
-apt-get install --only-upgrade apt
-echo "SIGN - Sleeping 5 seconds to make sure any apt upgrade is quiesced"
-sleep 5
-echo "SIGN - Upgrading other installed packages"
-apt-get -y upgrade
-echo "SIGN - Cleanup caches"
-apt-get -y clean
-apt-get -y --purge autoremove
-apt-get -y clean
+#echo "SIGN - Upgrading apt if necessary"
+#apt-get install --only-upgrade apt
+#echo "SIGN - Sleeping 5 seconds to make sure any apt upgrade is quiesced"
+#sleep 5
+#echo "SIGN - Upgrading other installed packages"
+#apt-get -y upgrade
+#echo "SIGN - Cleanup caches"
+#apt-get -y clean
+#apt-get -y --purge autoremove
+#apt-get -y clean
 
 # remove gnome keyring module config which causes pkcs11 warnings
 # when trying to do a git pull
@@ -279,7 +279,7 @@ rm -f /etc/pkcs11/modules/gnome-keyring-module
 
 echo "SIGN - Installing required packages"
   
-$PACKAGE_LIST="mc python3-dev python3-pip python3-mysql.connector python3-flask python3-sqlalchemy shellinabox sudo git"
+$PACKAGE_LIST = "mc python3-dev python3-pip python3-flask shellinabox sudo git"
 apt-get install $PACKAGE_LIST -y
 echo "SIGN - Cleaning up after installing packages"
 apt-get -y clean
