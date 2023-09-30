@@ -260,18 +260,19 @@ cd /opt 2> /dev/null || mkdir /opt
 
 #######################################
 
-#echo "SIGN - Updating package list"
-#apt-get update
-#echo "SIGN - Upgrading apt if necessary"
-#apt-get install --only-upgrade apt
-#echo "SIGN - Sleeping 5 seconds to make sure any apt upgrade is quiesced"
-#sleep 5
-#echo "SIGN - Upgrading other installed packages"
-#apt-get -y upgrade
+echo "SIGN - Updating package list"
+apt-get update
+echo "SIGN - Upgrading apt if necessary"
+apt-get install --only-upgrade apt
+echo "SIGN - Sleeping 5 seconds to make sure any apt upgrade is quiesced"
+sleep 5
+echo "SIGN - Upgrading other installed packages"
+apt-get -y upgrade
 echo "SIGN - Cleanup caches"
 apt-get -y clean
-#apt-get -y --purge autoremove
-#apt-get -y clean
+apt-get -y --purge autoremove
+
+apt-get -y clean
 
 # remove gnome keyring module config which causes pkcs11 warnings
 # when trying to do a git pull
@@ -329,16 +330,16 @@ git config --global --add safe.directory /opt/sign
 
 #######################################
 echo "SIGN - Populating ${SIGNHOME}"
-mkdir ${SIGNHOME}/.ssh
-chown ${SIGNUSER}.${SIGNUSER} ${SIGNHOME}/.ssh
-chmod 700 ${SIGNHOME}/.ssh
+mkdir ${SIGNHOME}.ssh
+#chown ${SIGNUSER}.${SIGNUSER} ${SIGNHOME}/.ssh
+chmod 700 ${SIGNHOME}.ssh
 
-mkdir ${SIGNHOME}/logs
-chown 755 ${SIGNHOME}/logs
+mkdir ${SIGNHOME}logs
+chown 755 ${SIGNHOME}logs
 
-echo >> ${SIGNHOME}/.bashrc
-echo ". /opt/sign/scripts/common" >> ${SIGNHOME}/.bashrc
-echo >> ${SIGNHOME}/.bashrc
+echo >> ${SIGNHOME}.bashrc
+echo ". /opt/sign/scripts/common" >> ${SIGNHOME}.bashrc
+echo >> ${SIGNHOME}.bashrc
 
 #######################################
 # Configure log rotation
