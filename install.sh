@@ -2,7 +2,7 @@
 
 # Led Trailer Sign Install Script
 SIGNBRANCH=${SIGNBRANCH:-"master"}
-SIGNIMAGEVER="2023-10-04"
+SIGNIMAGEVER="2023-10-05"
 SIGNCFGVER="1"
 SIGNPLATFORM="UNKNOWN"
 SIGNDIR=/opt/ledsign
@@ -320,8 +320,7 @@ if $clone_sign; then
     fi
 
     echo "SIGN - Cloning git repository into /opt/sign"
-#    git clone https://smartaleciam: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@github.com/smartalecim/Led_Sign.git sign
-gh repo clone smartaleciam/Led_Sign sign
+    git clone https://oauth2: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@github.com/smartalecim/Led_Sign.git sign
     cd sign
     git config pull.rebase true
 fi
