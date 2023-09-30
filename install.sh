@@ -281,8 +281,8 @@ echo "SIGN - Installing required packages"
   
 $PACKAGES="mc python3-dev python3-pip python3-mysql.connector python3-flask python3-sqlalchemy shellinabox sudo git"
 
-#apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install $PACKAGES
-apt-get install $PACKAGES -y
+apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install ${PACKAGES}
+#apt-get install $PACKAGES -y
 echo "SIGN - Cleaning up after installing packages"
 apt-get -y clean
 
