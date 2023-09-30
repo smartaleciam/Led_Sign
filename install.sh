@@ -1,4 +1,5 @@
-#!/bin/sh
+#!/bin/bash
+
 # Led Trailer Sign Install Script
 SIGNBRANCH=${SIGNBRANCH:-"master"}
 SIGNIMAGEVER="2023-09"
@@ -7,6 +8,7 @@ SIGNPLATFORM="UNKNOWN"
 SIGNDIR=/opt/ledsign
 SIGNUSER=SIGN
 SIGNHOME=/home/${FPPUSER}
+OSVER="UNKNOWN"
 
 # Make sure the sbin directories are on the path as we will
 # need the adduser/addgroup/ldconfig/a2enmod/etc... commands
@@ -14,17 +16,17 @@ PATH=$PATH:/usr/sbin:/sbin
 
 # CPU Count
 CPUS=$(grep "^processor" /proc/cpuinfo | wc -l)
-if [ ${CPUS} -gt 1 ]; then
+if [[ ${CPUS} -gt 1 ]]; then
     MEMORY=$(grep MemTot /proc/meminfo | awk '{print $2}')
-    if [ ${MEMORY} -lt 425000 ]; then
+    if [[ ${MEMORY} -lt 425000 ]]; then
         # very limited memory, only use one core or we'll fail or
         # will be very slow as we constantly swap in/out
         CPUS=1
-    elif [ ${MEMORY} -lt 512000 ]; then
+    elif [[ ${MEMORY} -lt 512000 ]]; then
         SWAPTOTAL=$(grep SwapTotal /proc/meminfo | awk '{print $2}')
         # Limited memory, if we have some swap, we'll go ahead with -j 2
         # otherwise we'll need to stick with -j 1 or we run out of memory
-        if [ ${SWAPTOTAL} -gt 49000 ]; then
+        if [[ ${SWAPTOTAL} -gt 49000 ]]; then
             CPUS=2
         else
             CPUS=1
@@ -176,7 +178,7 @@ STARTTIME=$(date)
 #######################################
 # Log output and notify user
 echo "ALL output will be copied to SIGN_Install.log"
-exec >> (tee -a SIGN_Install.log)
+exec > >(tee -a SIGN_Install.log)
 exec 2>&1
 echo "========================================================================"
 echo "SIGN_Install.sh started at ${STARTTIME}"
