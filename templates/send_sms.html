@@ -1,0 +1,18 @@
+ 
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Send SMS</title>
+</head>
+<body>
+    <h1>Send SMS</h1>
+    {% include 'menu.html' %}
+    <form method="POST" action="/send_sms">
+        <label for="recipient">Recipient:</label>
+        <input type="text" id="recipient" name="recipient"><br><br>
+        <label for="message">Message:</label><br>
+        <textarea id="message" name="message" rows="4" cols="50"></textarea><br><br>
+        <input type="submit" value="Send SMS">
+    </form>
+</body>
+</html>

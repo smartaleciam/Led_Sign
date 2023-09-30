@@ -1,0 +1,9 @@
+ 
+/dev/ttyUSB2
+115200
+connect "/usr/sbin/chat -v -f /etc/chatscripts/gprs"
+noipdefault
+usepeerdns
+defaultroute
+replacedefaultroute
+hide-password

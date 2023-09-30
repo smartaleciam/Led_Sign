@@ -1,0 +1,15 @@
+# Contents of /etc/systemd/system/sign.service
+[Unit]
+Description=Sign Control System
+After=network.target
+
+[Service]
+Type=simple
+Restart=always
+WorkingDirectory=/home/smartalec/sign/
+User=smartalec
+ExecStart=/usr/bin/python3 /home/smartalec/sign/app.py
+
+[Install]
+WantedBy=multi-user.target
+  
