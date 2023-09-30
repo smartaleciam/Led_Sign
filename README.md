@@ -9,7 +9,9 @@ Must have the ability to
 3. Read Data from Solar Controller,
 4. Ability to Upload / Download via FTP
 5. Turn On / Off all Panels
-
+6. Ability to accept / display a live IP stream
+7. Upload Display Templates - Update scores Etc.
+   
 <img src="https://github.com/smartaleciam/Led_Sign/blob/main/sign_trailer.png" align="left" height="100" width="100">
 
 # #### Currently in Development #####</b>
