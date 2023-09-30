@@ -2,7 +2,7 @@
 
 # Led Trailer Sign Install Script
 SIGNBRANCH=${SIGNBRANCH:-"master"}
-SIGNIMAGEVER="2023-10-03"
+SIGNIMAGEVER="2023-10-04"
 SIGNCFGVER="1"
 SIGNPLATFORM="UNKNOWN"
 SIGNDIR=/opt/ledsign
@@ -340,17 +340,17 @@ echo >> ${SIGNHOME}.bashrc
 echo ". /opt/sign/scripts/common" >> ${SIGNHOME}.bashrc
 echo >> ${SIGNHOME}.bashrc
 
-#######################################
-# Configure log rotation
-echo "SIGN - Configuring log rotation"
-cp /opt/sign/etc/logrotate.d/* /etc/logrotate.d/
-sed -i -e "s/#compress/compress/" /etc/logrotate.conf
-sed -i -e "s/rotate .*/rotate 2/" /etc/logrotate.conf
-#######################################
-
-echo "SIGN - Creating System Service"
-
-cat >> /etc/systemd/system/sign.service <<EOF 
+    if [ -e "/opt/sign" ]
+    then
+	#######################################
+	# Configure log rotation
+	echo "SIGN - Configuring log rotation"
+	cp /opt/sign/etc/logrotate.d/* /etc/logrotate.d/
+	sed -i -e "s/#compress/compress/" /etc/logrotate.conf
+	sed -i -e "s/rotate .*/rotate 2/" /etc/logrotate.conf
+	#######################################
+	echo "SIGN - Creating System Service"
+	cat >> /etc/systemd/system/sign.service <<EOF 
 
 [Unit]
 Description=Sign Control System
@@ -359,18 +359,18 @@ After=network.target
 [Service]
 Type=simple
 Restart=always
-WorkingDirectory=/home/smartalec/sign/
+WorkingDirectory=/opt/sign/
 User=smartalec
-ExecStart=/usr/bin/python3 /home/smartalec/sign/app.py
+ExecStart=/usr/bin/python3 /opt/sign/app.py
 
 [Install]
 WantedBy=multi-user.target
   
 EOF
     
-systemctl enable sign.service
-systemctl start sign.service
-
+	systemctl enable sign.service
+	systemctl start sign.service
+fi
 #######################################
 #echo "SIGN - Giving ${SIGNUSER} user sudo"
 #echo "${SIGNUSER} ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
