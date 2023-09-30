@@ -176,7 +176,7 @@ STARTTIME=$(date)
 #######################################
 # Log output and notify user
 echo "ALL output will be copied to SIGN_Install.log"
-exec >>(tee -a SIGN_Install.log)
+exec >> (tee -a SIGN_Install.log)
 exec 2>&1
 echo "========================================================================"
 echo "SIGN_Install.sh started at ${STARTTIME}"
