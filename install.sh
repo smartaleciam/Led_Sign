@@ -268,8 +268,8 @@ cd /opt 2> /dev/null || mkdir /opt
 #sleep 5
 #echo "SIGN - Upgrading other installed packages"
 #apt-get -y upgrade
-#echo "SIGN - Cleanup caches"
-#apt-get -y clean
+echo "SIGN - Cleanup caches"
+apt-get -y clean
 #apt-get -y --purge autoremove
 #apt-get -y clean
 
