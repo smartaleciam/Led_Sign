@@ -2,7 +2,7 @@
 
 # Led Trailer Sign Install Script
 SIGNBRANCH=${SIGNBRANCH:-"master"}
-SIGNIMAGEVER="2023-10-01"
+SIGNIMAGEVER="2023-10-02"
 SIGNCFGVER="1"
 SIGNPLATFORM="UNKNOWN"
 SIGNDIR=/opt/ledsign
@@ -329,16 +329,16 @@ git config --global --add safe.directory /opt/sign
 
 #######################################
 echo "SIGN - Populating ${SIGNHOME}"
-mkdir ${SIGNHOME}.ssh
+mkdir ${SIGNHOME}/.ssh
 #chown ${SIGNUSER}.${SIGNUSER} ${SIGNHOME}/.ssh
-chmod 700 ${SIGNHOME}.ssh
+chmod 700 ${SIGNHOME}/.ssh
 
-mkdir ${SIGNHOME}logs
-chown 755 ${SIGNHOME}logs
+mkdir ${SIGNHOME}/logs
+chown 755 ${SIGNHOME}/logs
 
-echo >> ${SIGNHOME}.bashrc
-echo ". /opt/sign/scripts/common" >> ${SIGNHOME}.bashrc
-echo >> ${SIGNHOME}.bashrc
+echo >> ${SIGNHOME}/.bashrc
+echo ". /opt/sign/scripts/common" >> ${SIGNHOME}/.bashrc
+echo >> ${SIGNHOME}/.bashrc
 
 if [ -e "/opt/sign" ]
 then
@@ -387,7 +387,7 @@ you aren't one of those, you're probably looking for the web-based GUI.
 You can access the UI by typing "http://sign.local/" into a web browser.[0m
 EOF
 #######################################
-cat >> /etc/ppp/peers/gprs/ppp.txt <<EOF 
+cat > /etc/ppp/peers/gprs/ppp.txt <<EOF 
 /dev/ttyUSB2
 115200
 connect "/usr/sbin/chat -v -f /etc/chatscripts/gprs"
