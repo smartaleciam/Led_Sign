@@ -349,8 +349,9 @@ mkdir ${SIGNHOME}/logs
 chown 755 ${SIGNHOME}/logs
 #######################################
 echo "SIGN - Creating System Service"
-cat <<-EOF >> /etc/systemd/system/sign.service
-# Contents of /etc/systemd/system/sign.service
+
+cat >> /etc/systemd/system/sign.service <<EOF
+
 [Unit]
 Description=Sign Control System
 After=network.target
@@ -375,14 +376,15 @@ systemctl start sign.service
 
 #######################################
 # Print notice during login regarding console access
-cat <<-EOF >> /etc/motd
-[0;31m
-                 [0m LED Sign Controller[0;31m
-[1m
+cat >> /etc/motd <<EOF 
+
+                  LED Sign Controller
+
 This SIGN console is for advanced users, debugging, and developers.  If
 you aren't one of those, you're probably looking for the web-based GUI.
 
-You can access the UI by typing "http://sign.local/" into a web browser.[0m
+You can access the UI by typing "http://sign.local/" into a web browser.
+
 EOF
 
     #######################################
