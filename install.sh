@@ -2,7 +2,7 @@
 
 # Led Trailer Sign Install Script
 SIGNBRANCH=${SIGNBRANCH:-"master"}
-SIGNIMAGEVER="2023-10-03"
+SIGNIMAGEVER="2023-10-04"
 SIGNCFGVER="1"
 SIGNPLATFORM="UNKNOWN"
 SIGNDIR=/opt/sign
@@ -291,12 +291,12 @@ echo "SIGN - Disabling Camera AutoDetect"
 sed -i -e "s/camera_auto_detect/#camera_auto_detect/" /boot/config.txt
 
 echo "SIGN - Disabling fancy network interface names"
-@sed -e 's/rootwait/rootwait net.ifnames=0 biosdevname=0/' /boot/cmdline.txt
+sed -e 's/rootwait/rootwait net.ifnames=0 biosdevname=0/' /boot/cmdline.txt
 
-@echo "SIGN - Disabling Swap to save SD card"
-@systemctl disable dphys-swapfile          
+echo "SIGN - Disabling Swap to save SD card"
+systemctl disable dphys-swapfile          
 
-@dpkg-reconfigure --frontend=noninteractive locales
+dpkg-reconfigure --frontend=noninteractive locales
             
 #######################################
 # Make sure /opt exists
@@ -325,18 +325,18 @@ git config --global --add safe.directory /opt/sign
 
 #######################################
 echo "SIGN - Populating ${SIGNHOME}"
-if [! -e "/${SIGNHOME}/.ssh" ]
+if [ cd /${SIGNHOME}/.ssh 2> /dev/null]
 then
     mkdir ${SIGNHOME}/.ssh
     #chown ${SIGNUSER}.${SIGNUSER} ${SIGNHOME}/.ssh
     chmod 700 ${SIGNHOME}/.ssh
 fi
-if [! -e "/${SIGNHOME}/logs" ]
+if ![ -e "/${SIGNHOME}/logs" ]
 then
     mkdir ${SIGNHOME}/logs
     chown 755 ${SIGNHOME}/logs
 fi
-if [! -e "/${SIGNHOME}/.bashrc" ]
+if ![ -e "/${SIGNHOME}/.bashrc" ]
 then
     echo >> ${SIGNHOME}/.bashrc
     echo ". /opt/sign/scripts/common" >> ${SIGNHOME}/.bashrc
@@ -352,10 +352,11 @@ sed -i -e "s/rotate .*/rotate 2/" /etc/logrotate.conf
 # Move all files to correct locations
 echo "SIGN - Moving Files to Correct locations"
 cp /opt/sign/etc/systemd/system/* /etc/systemd/system/
+cd /etc/ppp/gprs 2> /dev/null || mkdir /etc/ppp/gprs
 cp /opt/sign/etc/ppp/gprs/* /etc/ppp/gprs/
 #cp /opt/sign/etc/chatscripts/* /etc/chatscripts/
 cp /opt/sign/etc/motd /etc/motd
-cp /opt/sign/sign/* ${SIGNHOME}
+cp /opt/sign/sign/* ${SIGNHOME}/
 
 #######################################
 echo "SIGN - Enabling System Service"
