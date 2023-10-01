@@ -22,8 +22,8 @@ GPIO.setup(senPIR, GPIO.IN)
 
 
 # Initialize the SIM7600G-H modem
-modem = GsmModem('/dev/ttyUSB2')  # Replace with the correct serial port
-modem.connect()
+#modem = GsmModem('/dev/ttyUSB2')  # Replace with the correct serial port
+#modem.connect()
 
 # FTP server settings
 ftp_host = 'ftp.example.com'  # Replace with your FTP server's host
@@ -105,4 +105,4 @@ def upload_file():
     return render_template('upload.html', current_time=current_time)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=80)
+    app.run(host='0.0.0.0', port=8080)
