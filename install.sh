@@ -2,7 +2,7 @@
 
 # Led Trailer Sign Install Script
 SIGNBRANCH=${SIGNBRANCH:-"master"}
-SIGNIMAGEVER="2023-10-02"
+SIGNIMAGEVER="2023-10-03"
 SIGNCFGVER="1"
 SIGNPLATFORM="UNKNOWN"
 SIGNDIR=/opt/sign
@@ -244,39 +244,31 @@ rm /etc/issue.new
 
 
 #######################################
-#echo "SIGN - Setting US keyboard layout and locale"
-#sed -i 's/^\(en_GB.UTF-8\)/# \1/;s/..\(en_AU.UTF-8\)/\1/' /etc/locale.gen
-#sed -i "s/XKBLAYOUT=".*"/XKBLAYOUT="us"/" /etc/default/keyboard
-#echo "LANG=en_AU.UTF-8" > /etc/default/locale
-#export LANG=en_AU.UTF-8
+echo "SIGN - Setting US keyboard layout and locale"
+sed -i 's/^\(en_GB.UTF-8\)/# \1/;s/..\(en_AU.UTF-8\)/\1/' /etc/locale.gen
+sed -i "s/XKBLAYOUT=".*"/XKBLAYOUT="us"/" /etc/default/keyboard
+echo "LANG=en_AU.UTF-8" > /etc/default/locale
+export LANG=en_AU.UTF-8
 
 # end of if desktop
 fi
 
-#######################################
-# Make sure /opt exists
-echo "SIGN - Checking for existence of /opt"
-cd /opt 2> /dev/null || mkdir /opt
-
-
-#######################################
-
-#echo "SIGN - Updating package list"
-#apt-get update
-#echo "SIGN - Upgrading apt if necessary"
-#apt-get install --only-upgrade apt
-#echo "SIGN - Sleeping 5 seconds to make sure any apt upgrade is quiesced"
-#sleep 5
-#echo "SIGN - Upgrading other installed packages"
-#apt-get -y upgrade
-#echo "SIGN - Cleanup caches"
-#apt-get -y clean
-#apt-get -y --purge autoremove
-#apt-get -y clean
+echo "SIGN - Updating package list"
+apt-get update
+echo "SIGN - Upgrading apt if necessary"
+apt-get install --only-upgrade apt
+echo "SIGN - Sleeping 5 seconds to make sure any apt upgrade is quiesced"
+sleep 5
+echo "SIGN - Upgrading other installed packages"
+apt-get -y upgrade
+echo "SIGN - Cleanup caches"
+apt-get -y clean
+apt-get -y --purge autoremove
+apt-get -y clean
 
 # remove gnome keyring module config which causes pkcs11 warnings
 # when trying to do a git pull
-#rm -f /etc/pkcs11/modules/gnome-keyring-module
+rm -f /etc/pkcs11/modules/gnome-keyring-module
 
 echo "SIGN - Installing required packages"
 apt-get install mc python3-dev python3-pip python3-flask shellinabox sudo git ppp minicom -y
@@ -284,21 +276,21 @@ apt-get install mc python3-dev python3-pip python3-flask shellinabox sudo git pp
 echo "SIGN - Cleaning up after installing packages"
 apt-get -y clean
 
-#echo "SIGN - Installing PIP Modules"
-#pip3 install Flask python-gsmmodem pyftpdlib mysql-connector
+echo "SIGN - Installing PIP Modules"
+pip3 install Flask python-gsmmodem pyftpdlib mysql-connector
 
-#echo "SIGN - Configuring shellinabox to use /var/tmp"
-#echo "SHELLINABOX_DATADIR=/var/tmp/" >> /etc/default/shellinabox
-#sed -i -e "s/SHELLINABOX_ARGS.*/SHELLINABOX_ARGS=\"--no-beep -t\"/" /etc/default/shellinabox
+echo "SIGN - Configuring shellinabox to use /var/tmp"
+echo "SHELLINABOX_DATADIR=/var/tmp/" >> /etc/default/shellinabox
+sed -i -e "s/SHELLINABOX_ARGS.*/SHELLINABOX_ARGS=\"--no-beep -t\"/" /etc/default/shellinabox
 
-#echo "SIGN - Disabling the VC4 OpenGL driver"
-#sed -i -e "s/dtoverlay=vc4-fkms-v3d/#dtoverlay=vc4-fkms-v3d/" /boot/config.txt
-#sed -i -e "s/dtoverlay=vc4-kms-v3d/#dtoverlay=vc4-kms-v3d/" /boot/config.txt
+echo "SIGN - Disabling the VC4 OpenGL driver"
+sed -i -e "s/dtoverlay=vc4-fkms-v3d/#dtoverlay=vc4-fkms-v3d/" /boot/config.txt
+sed -i -e "s/dtoverlay=vc4-kms-v3d/#dtoverlay=vc4-kms-v3d/" /boot/config.txt
             
-#echo "SIGN - Disabling Camera AutoDetect"
-#sed -i -e "s/camera_auto_detect/#camera_auto_detect/" /boot/config.txt
+echo "SIGN - Disabling Camera AutoDetect"
+sed -i -e "s/camera_auto_detect/#camera_auto_detect/" /boot/config.txt
 
-#echo "SIGN - Disabling fancy network interface names"
+echo "SIGN - Disabling fancy network interface names"
 @sed -e 's/rootwait/rootwait net.ifnames=0 biosdevname=0/' /boot/cmdline.txt
 
 @echo "SIGN - Disabling Swap to save SD card"
@@ -306,6 +298,10 @@ apt-get -y clean
 
 @dpkg-reconfigure --frontend=noninteractive locales
             
+#######################################
+# Make sure /opt exists
+echo "SIGN - Checking for existence of /opt"
+cd /opt 2> /dev/null || mkdir /opt
 #######################################
 # Clone git repository
 cd /opt
@@ -319,7 +315,7 @@ if $clone_sign; then
         rm -rf /opt/sign
     fi
 
-    echo "SIGN - Cloning git repository into /opt/sign"
+    echo "SIGN - Cloning git repository"
     git clone https://github.com/smartaleciam/Led_Sign.git sign
     cd sign
     git config pull.rebase true
@@ -359,6 +355,7 @@ cp /opt/sign/etc/systemd/system/* /etc/systemd/system/
 cp /opt/sign/etc/ppp/gprs/* /etc/ppp/gprs/
 #cp /opt/sign/etc/chatscripts/* /etc/chatscripts/
 cp /opt/sign/etc/motd /etc/motd
+cp /opt/sign/sign/* ${SIGNHOME}
 
 #######################################
 echo "SIGN - Enabling System Service"
