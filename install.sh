@@ -2,7 +2,7 @@
 
 # Led Trailer Sign Install Script
 SIGNBRANCH=${SIGNBRANCH:-"master"}
-SIGNIMAGEVER="2023-10-06"
+SIGNIMAGEVER="2023-10-02"
 SIGNCFGVER="1"
 SIGNPLATFORM="UNKNOWN"
 SIGNDIR=/opt/sign
@@ -279,13 +279,13 @@ cd /opt 2> /dev/null || mkdir /opt
 #rm -f /etc/pkcs11/modules/gnome-keyring-module
 
 echo "SIGN - Installing required packages"
-apt-get install mc python3-dev python3-pip python3-flask shellinabox sudo git python3-mysql ppp -y
+apt-get install mc python3-dev python3-pip python3-flask shellinabox sudo git ppp minicom -y
 
 echo "SIGN - Cleaning up after installing packages"
 apt-get -y clean
 
 #echo "SIGN - Installing PIP Modules"
-#pip3 install Flask python-gsmmodem pyftpdlib
+#pip3 install Flask python-gsmmodem pyftpdlib mysql-connector
 
 #echo "SIGN - Configuring shellinabox to use /var/tmp"
 #echo "SHELLINABOX_DATADIR=/var/tmp/" >> /etc/default/shellinabox
@@ -329,17 +329,23 @@ git config --global --add safe.directory /opt/sign
 
 #######################################
 echo "SIGN - Populating ${SIGNHOME}"
-mkdir ${SIGNHOME}/.ssh
-#chown ${SIGNUSER}.${SIGNUSER} ${SIGNHOME}/.ssh
-chmod 700 ${SIGNHOME}/.ssh
-
-mkdir ${SIGNHOME}/logs
-chown 755 ${SIGNHOME}/logs
-
-echo >> ${SIGNHOME}/.bashrc
-echo ". /opt/sign/scripts/common" >> ${SIGNHOME}/.bashrc
-echo >> ${SIGNHOME}/.bashrc
-
+if [! -e "/${SIGNHOME}/.ssh" ]
+then
+    mkdir ${SIGNHOME}/.ssh
+    #chown ${SIGNUSER}.${SIGNUSER} ${SIGNHOME}/.ssh
+    chmod 700 ${SIGNHOME}/.ssh
+fi
+if [! -e "/${SIGNHOME}/logs" ]
+then
+    mkdir ${SIGNHOME}/logs
+    chown 755 ${SIGNHOME}/logs
+fi
+if [! -e "/${SIGNHOME}/.bashrc" ]
+then
+    echo >> ${SIGNHOME}/.bashrc
+    echo ". /opt/sign/scripts/common" >> ${SIGNHOME}/.bashrc
+    echo >> ${SIGNHOME}/.bashrc
+fi
 #######################################
 # Configure log rotation
 echo "SIGN - Configuring log rotation"
@@ -347,67 +353,20 @@ cp /opt/sign/etc/logrotate.d/* /etc/logrotate.d/
 sed -i -e "s/#compress/compress/" /etc/logrotate.conf
 sed -i -e "s/rotate .*/rotate 2/" /etc/logrotate.conf
 #######################################
-echo "SIGN - Creating System Service"
-cat >> /etc/systemd/system/sign.service <<EOF
-[Unit]
-Description=Sign Control System
-After=network.target
+# Move all files to correct locations
+echo "SIGN - Moving Files to Correct locations"
+cp /opt/sign/etc/systemd/system/* /etc/systemd/system/
+cp /opt/sign/etc/ppp/gprs/* /etc/ppp/gprs/
+#cp /opt/sign/etc/chatscripts/* /etc/chatscripts/
+cp /opt/sign/etc/motd /etc/motd
 
-[Service]
-Type=simple
-Restart=always
-WorkingDirectory=/opt/sign/
-User=smartalec
-ExecStart=/usr/bin/python3 /opt/sign/app.py
-
-[Install]
-WantedBy=multi-user.target
-EOF
+#######################################
 echo "SIGN - Enabling System Service"
 systemctl enable sign.service
 systemctl start sign.service
 #######################################
 #echo "SIGN - Giving ${SIGNUSER} user sudo"
 #echo "${SIGNUSER} ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
-
-#######################################
-# Print notice during login regarding console access
-cat <<-EOF >> /etc/motd
-[0;31m
-                  [0mLED Sign Controller[0;31m
-[1m
-This SIGN console is for advanced users, debugging, and developers.  If
-you aren't one of those, you're probably looking for the web-based GUI.
-
-You can access the UI by typing "http://sign.local/" into a web browser.[0m
-EOF
-#######################################
-cat > /etc/ppp/peers/gprs/ppp.txt <<EOF 
-/dev/ttyUSB2
-115200
-connect "/usr/sbin/chat -v -f /etc/chatscripts/gprs"
-noipdefault
-usepeerdns
-defaultroute
-replacedefaultroute
-hide-password
-EOF
-#######################################
-cat >> /etc/chatscripts/gprs.txt <<EOF 
- ABORT "BUSY"
-ABORT "NO CARRIER"
-ABORT "VOICE"
-ABORT "NO DIALTONE"
-ABORT "NO DIAL TONE"
-ABORT "NO ANSWER"
-ABORT "DELAYED"
-TIMEOUT 30
-"" "AT"
-OK "ATE0"
-OK "AT+CGDCONT=1,\"IP\",\"your_apn_here\""
-OK "ATD*99#"
-CONNECT ""
-EOF
 
 #######################################
 ENDTIME=$(date)
