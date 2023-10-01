@@ -1,0 +1,70 @@
+ 
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sign - Control System</title>
+</head>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<body>
+    <h1>Main Control Panel</h1>
+    <p>Current Time: {{ current_time }}</p>
+    {% include 'menu.html' %}
+<!--    <form method="POST" action="/send_sms">
+         ... (rest of your form) 
+    </form>
+-->
+
+<!-- Display A map with the latest GPS -->
+<div id="map" style="height: 400px;"></div>
+<script>
+    var map = L.map('map').setView([0, 0], 12); // Initialize map with default coordinates and zoom level
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map); // Use OpenStreetMap tiles
+    
+    // Update map with GPS coordinates (replace with real-time data)
+    function updateMap(lat, lon) {
+        map.setView([lat, lon], 12);
+        L.marker([lat, lon]).addTo(map);
+    }
+    
+    // Example: Call updateMap with real-time GPS data
+    updateMap({{ latitude }}, {{ longitude }});
+</script>
+
+<!-- Display the Fire Wall Status and Attacks -->
+<h1>Firewall Status</h1>
+    <div id="status"></div>
+    
+    <h2>Potential Attacks</h2>
+    <ul id="attacks"></ul>
+
+    <script>
+        function updateStatus() {
+            fetch('/get_firewall_status')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('status').textContent = data;
+                });
+        }
+
+        function updateAttacks() {
+            fetch('/get_firewall_attacks')
+                .then(response => response.json())
+                .then(data => {
+                    const attacksList = document.getElementById('attacks');
+                    attacksList.innerHTML = '';
+                    data.forEach(ip => {
+                        const li = document.createElement('li');
+                        li.textContent = ip;
+                        attacksList.appendChild(li);
+                    });
+                });
+        }
+
+        // Update the status and attacks every 5 seconds (adjust the interval as needed)
+        setInterval(updateStatus, 5000);
+        setInterval(updateAttacks, 5000);
+        updateStatus(); // Initial update
+        updateAttacks(); // Initial update
+    </script></body>
+</html>
