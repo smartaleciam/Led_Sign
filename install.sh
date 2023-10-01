@@ -2,7 +2,7 @@
 
 # Led Trailer Sign Install Script
 SIGNBRANCH=${SIGNBRANCH:-"master"}
-SIGNIMAGEVER="2023-10-04"
+SIGNIMAGEVER="2023-10-05"
 SIGNCFGVER="1"
 SIGNPLATFORM="UNKNOWN"
 SIGNDIR=/opt/sign
@@ -331,17 +331,16 @@ then
     #chown ${SIGNUSER}.${SIGNUSER} ${SIGNHOME}/.ssh
     chmod 700 ${SIGNHOME}/.ssh
 fi
-if ![ -e "/${SIGNHOME}/logs" ]
+if [ cd /${SIGNHOME}/logs 2> /dev/null]
 then
     mkdir ${SIGNHOME}/logs
     chown 755 ${SIGNHOME}/logs
 fi
-if ![ -e "/${SIGNHOME}/.bashrc" ]
-then
-    echo >> ${SIGNHOME}/.bashrc
-    echo ". /opt/sign/scripts/common" >> ${SIGNHOME}/.bashrc
-    echo >> ${SIGNHOME}/.bashrc
-fi
+#if [ cd /${SIGNHOME}/.bashrc 2> /dev/null]
+#then
+#    echo >> ${SIGNHOME}/.bashrc
+#    echo ". /opt/sign/scripts/common" >> ${SIGNHOME}/.bashrc
+#fi
 #######################################
 # Configure log rotation
 echo "SIGN - Configuring log rotation"
@@ -355,8 +354,9 @@ cp /opt/sign/etc/systemd/system/* /etc/systemd/system/
 cd /etc/ppp/gprs 2> /dev/null || mkdir /etc/ppp/gprs
 cp /opt/sign/etc/ppp/gprs/* /etc/ppp/gprs/
 #cp /opt/sign/etc/chatscripts/* /etc/chatscripts/
-cp /opt/sign/etc/motd /etc/motd
+cp /opt/sign/etc/motd /etc/
 cp /opt/sign/sign/* ${SIGNHOME}/
+echo ${SIGNHOME}
 
 #######################################
 echo "SIGN - Enabling System Service"
@@ -390,7 +390,7 @@ echo "sudo shutdown -r now"
 echo "========================================================="
 echo ""
 
-cp /root/SIGN_Install.* ${SIGNHOME}/
-chown sign.sign ${SIGNHOME}/SIGN_Install.*
+#cp /root/SIGN_Install.* ${SIGNHOME}/
+#chown sign.sign ${SIGNHOME}/SIGN_Install.*
 
 #sudo apt install ufw
