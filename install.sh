@@ -2,7 +2,7 @@
 
 # Led Trailer Sign Install Script
 SIGNBRANCH=${SIGNBRANCH:-"master"}
-SIGNIMAGEVER="2023-10-05"
+SIGNIMAGEVER="2023-10-06"
 SIGNCFGVER="1"
 SIGNPLATFORM="UNKNOWN"
 SIGNDIR=/opt/sign
@@ -355,8 +355,8 @@ cd /etc/ppp/gprs 2> /dev/null || mkdir /etc/ppp/gprs
 cp /opt/sign/etc/ppp/gprs/* /etc/ppp/gprs/
 #cp /opt/sign/etc/chatscripts/* /etc/chatscripts/
 cp /opt/sign/etc/motd /etc/
+cd ${SIGNHOME} 2> /dev/null || mkdir ${SIGNHOME}
 cp /opt/sign/sign/* ${SIGNHOME}/
-echo ${SIGNHOME}
 
 #######################################
 echo "SIGN - Enabling System Service"
