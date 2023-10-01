@@ -99,8 +99,8 @@ def upload_file():
             with FTP(ftp_host) as ftp:
                 ftp.login(ftp_user, ftp_password)
                 ftp.storbinary('STOR ' + uploaded_file.filename, uploaded_file)
-             current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-             return 'File uploaded successfully'
+                current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            return 'File uploaded successfully'
     current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     return render_template('upload.html', current_time=current_time)
 
