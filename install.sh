@@ -204,6 +204,13 @@ if $desktop; then
 else
 # Bunch of configuration we wont do if installing onto desktop
 # We shouldn't set the hostname or muck with the issue files, keyboard, etc...
+#######################################
+# Setting firewall
+sudo ufw logging on
+echo "SIGN - Setting up firewall"
+sudo ufw allow 22
+sudo ufw allow 8080
+sudo systemctl start ufw
 
 #######################################
 # Setting hostname
