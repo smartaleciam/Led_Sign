@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sign - Control System</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Main Control Panel</h1>
+    {% include 'menu.html' %}
+<!--    <form method="POST" action="/send_sms">
+         ... (rest of your form) 
+    </form>
+-->
+
+<!-- Display A map with the latest GPS -->
+<div id="map" style="height: 300px; width:400px;"></div>
+<!-- Display the Fire Wall Status and Attacks -->
+    <hr>
+    <h2>Firewall Status</h2>
+    <textarea id="status" name="Firewall Status" rows="4" cols="50"></textarea>
+    
+    <h2>Potential Attacks</h2>
+    <textarea id="attacks" name="Potential Attacks" rows="4" cols="80"></textarea>
+    <!-- GPIO INFO -->
+    <p>Button pressed:  {{ button }}</p>
+    <p>Motion detected: {{ senPIR }}</p>
+
+    <script>
+        var map = L.map('map').setView([-35.1402308,139.2871538], 15); // Initialize map with default coordinates and zoom level
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map); // Use OpenStreetMap tiles
+    
+    // Create an array to store map markers
+        var markers = [];
+
+    // Function to add a marker to the map with a custom pop-up label
+        function addMarker(latitude, longitude, label) {
+            var marker = L.marker([latitude, longitude]).addTo(map);
+            marker.bindPopup(label);
+            markers.push(marker);
+        }
+    
+    // Update map with GPS coordinates (replace with real-time data)
+        function updateGPSLocations() {
+            // Make an AJAX request to get updated data (replace with your endpoint)
+            fetch('/get_marker_locations')
+                .then(response => response.json())
+                .then(data => {
+                    // Clear existing markers
+                    markers.forEach(function(marker) {
+                        map.removeLayer(marker);
+                    });
+                    // Update the map with new markers
+                    data.forEach(function(item) {
+                        addMarker(item.latitude, item.longitude, item.label);
+                    });
+                });
+        }
+        
+        function updateStatus() {
+            fetch('/get_firewall_status')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('status').textContent = data;
+                });
+        }
+
+        function updateAttacks() {
+            fetch('/get_firewall_attacks')
+                .then(response => response.json())
+                .then(data => {
+                    const attacksList = document.getElementById('attacks');
+                    attacksList.innerHTML = '';
+                    data.forEach(ip => {
+                        const li = document.createElement('li');
+                        li.textContent = ip;
+                        attacksList.appendChild(li);
+                    });
+                });
+        }
+
+       // Update the status and attacks every 30 seconds (adjust the interval as needed)
+       setInterval(updateGPSLocations, 30000);
+       setInterval(updateStatus, 30000);
+       setInterval(updateAttacks, 30000);
+       updateGPSLocations(); // Initial update
+       updateStatus(); // Initial update
+       updateAttacks(); // Initial update
+   </script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<ul class="menu-bar">
+    <li><a href="/">Home</a></li>
+    <li><a href="/send_sms">Send SMS</a></li>
+    <li><a href="/receive_sms">Receive SMS</a></li>
+    <li><a href="/upload">Upload File</a></li>
+    <p>Current Time: <span id="current-time"></span></p>
+</ul>
+
+<script>
+function updateTime() {
+    const currentTimeSpan = document.getElementById('current-time');
+    const updateTimeInterval = 1000; // Update every 1 second (1000 milliseconds)
+
+    function displayCurrentTime() {
+        const now = new Date();
+        const formattedTime = now.toLocaleTimeString();
+        currentTimeSpan.textContent = formattedTime;
+    }
+    displayCurrentTime(); // Display initial time immediately
+    setInterval(displayCurrentTime, updateTimeInterval);
+}
+updateTime(); // Start the time update function
+</script>
+<br>
