@@ -279,13 +279,13 @@ apt-get -y clean
 rm -f /etc/pkcs11/modules/gnome-keyring-module
 
 echo "SIGN - Installing required packages"
-apt-get install mc python3-dev python3-pip python3-flask shellinabox sudo git ppp minicom ufw -y
+apt-get install mc python3-dev python3-pip python3-flask shellinabox sudo git ppp minicom ufw unzip -y
 
 echo "SIGN - Cleaning up after installing packages"
 apt-get -y clean
 
 echo "SIGN - Installing PIP Modules"
-pip3 install wheel Flask python-gsmmodem pyftpdlib mysql-connector
+pip3 install wheel Flask python-gsmmodem pyftpdlib mysql-connector pyserial
 
 echo "SIGN - Configuring shellinabox to use /var/tmp"
 echo "SHELLINABOX_DATADIR=/var/tmp/" >> /etc/default/shellinabox
