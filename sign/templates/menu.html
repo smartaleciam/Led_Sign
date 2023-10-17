@@ -3,22 +3,62 @@
     <li><a href="/send_sms">Send SMS</a></li>
     <li><a href="/receive_sms">Receive SMS</a></li>
     <li><a href="/upload">Upload File</a></li>
+ 
+ <img src="data:image/png;base64,{{ chart_base64 }}" alt="Disk Usage">
+ 
+ <div class="invert">
+  <span class="fa fa-2x inactive fa-signal"></span>
+
+  <div class="fa-layers fa-2x fa-fw">
+    <span class="fas fa-square-full" data-fa-mask="fas fa-signal" data-fa-transform="right-2"></span>
+    <span class="fas fa-square-full inactive" data-fa-mask="fas fa-signal" data-fa-transform="left-14"></span>
+  </div>
+
+  <div class="fa-layers fa-2x fa-fw">
+    <span class="fas fa-square-full" data-fa-mask="fas fa-signal" data-fa-transform="right-6"></span>
+    <span class="fas fa-square-full inactive" data-fa-mask="fas fa-signal" data-fa-transform="left-10"></span>
+  </div>
+
+  <div class="fa-layers fa-2x fa-fw">
+    <span class="fas fa-square-full" data-fa-mask="fas fa-signal" data-fa-transform="right-10"></span>
+    <span class="fas fa-square-full inactive" data-fa-mask="fas fa-signal" data-fa-transform="left-6"></span>
+  </div>
+
+  <div class="fa-layers fa-2x fa-fw">
+    <span class="fas fa-square-full" data-fa-mask="fas fa-signal" data-fa-transform="right-14"></span>
+    <span class="fas fa-square-full inactive" data-fa-mask="fas fa-signal" data-fa-transform="left-2"></span>
+  </div>
+
+  <span class="fa fa-2x fa-signal"></span>
+
+</div>
+
+    <i class="fas fa-battery-full"></i> Battery Voltage: {{ battery_voltage }}V
+    <i class="fas fa-battery-three-quarters"></i> Battery Percentage: {{ battery_percent }}%
+
     <p>Current Time: <span id="current-time"></span></p>
 </ul>
 
 <script>
 function updateTime() {
-    const currentTimeSpan = document.getElementById('current-time');
-    const updateTimeInterval = 1000; // Update every 1 second (1000 milliseconds)
+    var currentTimeElement = document.getElementById('current-time');
+//    const currentTimeSpan = document.getElementById('current-time');
+//    const updateTimeInterval = 1000; // Update every 1 second (1000 milliseconds)
 
-    function displayCurrentTime() {
-        const now = new Date();
-        const formattedTime = now.toLocaleTimeString();
-        currentTimeSpan.textContent = formattedTime;
-    }
-    displayCurrentTime(); // Display initial time immediately
-    setInterval(displayCurrentTime, updateTimeInterval);
+//    function displayCurrentTime() {
+//        const now = new Date();
+//        const formattedTime = now.toLocaleTimeString();
+//        currentTimeSpan.textContent = formattedTime;
+//    }
+//    displayCurrentTime(); // Display initial time immediately
+//    setInterval(displayCurrentTime, updateTimeInterval);
+
+    var currentTime = new Date().toLocaleTimeString();
+    currentTimeElement.textContent = currentTime;
+
 }
-updateTime(); // Start the time update function
+
+setInterval(updateTime,1000);
+//updateTime(); // Start the time update function
 </script>
 <br>
