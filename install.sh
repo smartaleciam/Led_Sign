@@ -279,7 +279,7 @@ apt-get -y clean
 rm -f /etc/pkcs11/modules/gnome-keyring-module
 
 echo "SIGN - Installing required packages"
-apt-get install mc python3-dev python3-pip python3-flask shellinabox sudo git ppp minicom ufw libopenblas-dev unzip -y
+apt-get install mc python3-dev python3-pip python3-flask shellinabox sudo git ppp minicom ufw libopenblas-dev unzip mosquitto mosquitto-clients -y
 
 echo "SIGN - Cleaning up after installing packages"
 apt-get -y clean
@@ -305,7 +305,11 @@ echo "SIGN - Disabling Swap to save SD card"
 systemctl disable dphys-swapfile          
 
 dpkg-reconfigure --frontend=noninteractive locales
-            
+
+echo "SIGN - Setting up Mosquitto"
+sudo systemctl start mosquitto
+sudo systemctl enable mosquitto
+           
 #######################################
 # Make sure /opt exists
 echo "SIGN - Checking for existence of /opt"
