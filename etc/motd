@@ -1,6 +1,10 @@
- 
-[0;31m
-                  [0mLED Sign Controller[0;31m
+\033[32mSystem Status: OK\033[0m
+\033[34mCPU Usage: 20%\033[0m
+\033[34mMemory Usage: 30%\033[0m
+\033[34mDisk Space: 60%\033[0m
+
+\033[0;31m
+                  [0mLED Sign Controller\033[0;31m
 [1m
 This SIGN console is for advanced users, debugging, and developers.  If
 you aren't one of those, you're probably looking for the web-based GUI.
