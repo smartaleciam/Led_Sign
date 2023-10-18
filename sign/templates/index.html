@@ -5,10 +5,12 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+<!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"> -->
 </head>
 <body>
-    <h1>Main Control Panel</h1>
     {% include 'menu.html' %}
+    <h1>Main Control Panel</h1>
+    <br>
 <!--    <form method="POST" action="/send_sms">
          ... (rest of your form) 
     </form>
@@ -26,10 +28,26 @@
     <!-- GPIO INFO -->
     <p>Button pressed:  {{ button }}</p>
     <p>Motion detected: {{ senPIR }}</p>
-    <p>Rasp pi Temp: {{ CPU_T }}</p>
-    <p>CPU Usage: {{ CPU_U }}</p>
     <p>Disk Stats: - Total: {{ DISK_total }}, Used: {{ DISK_used }}, Free: {{ DISK_free }}, Used %: {{ DISK_P }}</p>
-    <script>
+
+    <img src="data:image/png;base64,{{ chart_base64 }}" alt="Disk Usage">
+
+    <hr>
+    <h1>Real-time MQTT Signals</h1>
+    <textarea id="mqtt-data" name="Recived MQTT" rows="4" cols="80"></textarea>
+    <br>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+     <script type="text/javascript">
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+        socket.on('mqtt_data', function(data) {
+            var mqttDataDiv = document.getElementById('mqtt-data');
+            mqttDataDiv.innerHTML += data + "<br>";
+        });
+    </script>
+
+<script>
+    // ***********************Map section ******************************    
         var map = L.map('map').setView([-35.1402308,139.2871538], 15); // Initialize map with default coordinates and zoom level
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map); // Use OpenStreetMap tiles
     
@@ -83,7 +101,7 @@
         }
 
        // Update the status and attacks every 30 seconds (adjust the interval as needed)
-       setInterval(updateGPSLocations, 30000);  // Update Map GPS Locations Status
+//       setInterval(updateGPSLocations, 30000);  // Update Map GPS Locations Status
        setInterval(updateStatus, 30000); 
        setInterval(updateAttacks, 30000);
        updateGPSLocations(); // Initial update

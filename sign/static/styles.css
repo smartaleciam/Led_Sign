@@ -23,6 +23,16 @@ ul.menu-bar li a {
     text-decoration: none;
 }
 
+ul.menu-bar lii {
+    font-size: 12px;
+    float: right;
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
 ul.menu-bar li a:hover {
     background-color: #555;
 }
@@ -37,7 +47,18 @@ body {
 }
 
 .invert {
+  display: block;
   padding: .5em 0;
   color: white;
   background-color: black;
 }
+
+#time {
+    display: block;
+    color: white;
+    text-align: right;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+

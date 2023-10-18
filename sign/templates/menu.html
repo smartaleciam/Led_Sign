@@ -1,64 +1,60 @@
-<ul class="menu-bar">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <ul class="menu-bar">
     <li><a href="/">Home</a></li>
     <li><a href="/send_sms">Send SMS</a></li>
     <li><a href="/receive_sms">Receive SMS</a></li>
     <li><a href="/upload">Upload File</a></li>
- 
- <img src="data:image/png;base64,{{ chart_base64 }}" alt="Disk Usage">
- 
- <div class="invert">
-  <span class="fa fa-2x inactive fa-signal"></span>
+  <!--
 
-  <div class="fa-layers fa-2x fa-fw">
+<div class="invert">
+  <span class="fa fa-1x inactive fa-signal"></span>
+  <div class="fa-layers fa-1x fa-fw">
     <span class="fas fa-square-full" data-fa-mask="fas fa-signal" data-fa-transform="right-2"></span>
     <span class="fas fa-square-full inactive" data-fa-mask="fas fa-signal" data-fa-transform="left-14"></span>
   </div>
 
-  <div class="fa-layers fa-2x fa-fw">
+  <div class="fa-layers fa-1x fa-fw">
     <span class="fas fa-square-full" data-fa-mask="fas fa-signal" data-fa-transform="right-6"></span>
     <span class="fas fa-square-full inactive" data-fa-mask="fas fa-signal" data-fa-transform="left-10"></span>
   </div>
 
-  <div class="fa-layers fa-2x fa-fw">
+  <div class="fa-layers fa-1x fa-fw">
     <span class="fas fa-square-full" data-fa-mask="fas fa-signal" data-fa-transform="right-10"></span>
     <span class="fas fa-square-full inactive" data-fa-mask="fas fa-signal" data-fa-transform="left-6"></span>
   </div>
 
-  <div class="fa-layers fa-2x fa-fw">
+  <div class="fa-layers fa-1x fa-fw">
     <span class="fas fa-square-full" data-fa-mask="fas fa-signal" data-fa-transform="right-14"></span>
     <span class="fas fa-square-full inactive" data-fa-mask="fas fa-signal" data-fa-transform="left-2"></span>
   </div>
+-->
+  <lii>Signal:
+    <span class="fa fa-1x fa-signal"></span>    <!-- Full signal -->
+    <span class="fa fa-1x inactive fa-signal"></span>   <!-- No signal -->
+  </lii>
 
-  <span class="fa fa-2x fa-signal"></span>
+    <lii class="fas fa-sd-card">&nbsp&nbsp Free: <i id="disk_free"></i></lii>
 
-</div>
+    <lii class="fas fa-battery-full">&nbsp&nbsp Voltage: <i id="batt_volt"></i>V</lii>
+    <lii class="fas fa-battery-three-quarters">&nbsp&nbsp Battery: <i id="batt_percent"></i>%</lii>
 
-    <i class="fas fa-battery-full"></i> Battery Voltage: {{ battery_voltage }}V
-    <i class="fas fa-battery-three-quarters"></i> Battery Percentage: {{ battery_percent }}%
+    <lii class="fas fa-clock">&nbsp&nbsp <i id="s_time"></i></lii>
 
-    <p>Current Time: <span id="current-time"></span></p>
+    <lii class="fa fa-thermometer-half">&nbsp&nbsp Cpu Temp: <i id="cpu_temp"></i>c</lii>
+    <lii class="fas fa-microchip">&nbsp&nbsp Cpu Load: <i id="cpu_usage"></i>%</lii>
+
 </ul>
 
-<script>
-function updateTime() {
-    var currentTimeElement = document.getElementById('current-time');
-//    const currentTimeSpan = document.getElementById('current-time');
-//    const updateTimeInterval = 1000; // Update every 1 second (1000 milliseconds)
-
-//    function displayCurrentTime() {
-//        const now = new Date();
-//        const formattedTime = now.toLocaleTimeString();
-//        currentTimeSpan.textContent = formattedTime;
-//    }
-//    displayCurrentTime(); // Display initial time immediately
-//    setInterval(displayCurrentTime, updateTimeInterval);
-
-    var currentTime = new Date().toLocaleTimeString();
-    currentTimeElement.textContent = currentTime;
-
-}
-
-setInterval(updateTime,1000);
-//updateTime(); // Start the time update function
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+<script type="text/javascript">
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+//        socket.on('connect', function() {   console.log('Connected to the server');   });
+        socket.on('update_time', function(data) {   
+          var utcTime = new Date(data + ' UTC');  // Parse UTC time
+          var localTime = utcTime.toLocaleTimeString();  // Convert to local time
+          document.getElementById('s_time').textContent = data;
+        });
+        socket.on('cpu_temp', function(data) {   document.getElementById('cpu_temp').textContent = data;   });
+        socket.on('cpu_usage', function(data) {   document.getElementById('cpu_usage').textContent = data;   });
+        socket.on('disk_free', function(data) {   document.getElementById('disk_free').textContent = data;   });
 </script>
-<br>

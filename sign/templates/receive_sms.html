@@ -5,8 +5,9 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Received SMS</h1>
     {% include 'menu.html' %}
+    <h1>Received SMS</h1>
+    <br>
     <ul>
         {% for message in messages %}
             <li><strong>From:</strong> {{ message.number }}</li>

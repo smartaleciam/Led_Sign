@@ -1,18 +1,24 @@
 import RPi.GPIO as GPIO
 import os
-from datetime import datetime
+import datetime
+import time
 import subprocess
 import re
+import eventlet
 from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask_socketio import SocketIO
 #from gsmmodem import GsmModem
 from ftplib import FTP
 import psutil
 import matplotlib.pyplot as plt
 from io import BytesIO
 import base64
+import paho.mqtt.client as mqtt
 from flask_fontawesome import FontAwesome
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'MontyPython_secret_key'
+socketio = SocketIO(app, async_mode='gevent')  # Use Gevent async mode
 fa = FontAwesome(app)
 
 # Setup GPIO's
@@ -33,9 +39,31 @@ log_file_path = '/var/log/ufw.log'
 #modem.connect()
 
 # FTP server settings
-ftp_host = 'ftp.example.com'  # Replace with your FTP server's host
+ftp_host = 'ftp.signs.smartaleclights.com'  # Replace with your FTP server's host
 ftp_user = 'your_ftp_username'
 ftp_password = 'your_ftp_password'
+
+# MQTT configuration
+mqtt_broker = "localhost"
+mqtt_port = 1883
+mqtt_topic = "#"
+
+# MQTT on_connect callback
+def on_connect(client, userdata, flags, rc):
+    print("Connected to MQTT broker with code %d" % rc)
+    client.subscribe(mqtt_topic)
+
+# MQTT on_message callback
+def on_message(client, userdata, message):
+    mqtt_data = message.payload.decode()
+    socketio.emit('mqtt_data', mqtt_data)
+
+# Initialize the MQTT client
+mqtt_client = mqtt.Client()
+mqtt_client.on_connect = on_connect
+mqtt_client.on_message = on_message
+mqtt_client.connect(mqtt_broker, mqtt_port, 60)
+mqtt_client.loop_start()
 
 # UFW Firewall Status
 potential_attacks = []
@@ -86,6 +114,20 @@ def getDiskSpace():
         if i==2:
             return(line.split()[1:5])
 
+def update_stats():
+    while True:
+        current_time = datetime.datetime.utcnow().strftime('%H:%M:%S')
+        socketio.emit('update_time', current_time)
+        cpu_temp = getCPUtemperature()
+        socketio.emit('cpu_temp', cpu_temp)
+        cpu_usage = getCPUuse()
+        socketio.emit('cpu_usage', cpu_usage)
+        DISK_stats = getDiskSpace()
+        disk_left = DISK_stats[2]
+        socketio.emit('disk_free', disk_left)
+
+        socketio.sleep(1)  # Emit updates every second
+
 ################################################################
 
 @app.route('/')
@@ -93,8 +135,6 @@ def home():
     # Read Sensors Status
     buttonSts = GPIO.input(button)
     senPIRSts = GPIO.input(senPIR)
-    CPU_Temp = getCPUtemperature()
-    CPU_Usage = getCPUuse()
     DISK_space = getDiskSpace()
     # Output is in kb, here I convert it in Mb for readability
     RAM_stats = getRAMinfo()
@@ -108,9 +148,6 @@ def home():
     DISK_used = DISK_stats[1]
     DISK_left = DISK_stats[2]
     DISK_perc = DISK_stats[3]
-
-    # Get Current Time
-    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     # Get disk usage statistics
     disk_usage = psutil.disk_usage('/')
@@ -132,22 +169,22 @@ def home():
 
     # Get battery status and info
     battery = psutil.sensors_battery()
-    battery_percent = battery.percent
-    battery_voltage = battery.volt
-
+    if battery is not None:
+        battery_percent = battery.percent
+        battery_voltage = battery.volt
+    else:
+        battery_percent = "N/A"
+        battery_voltage = "N/A"
 
     # Render the HTML template with the chart
  
     templateData = {
         'button'  : buttonSts,
         'senPIR'  : senPIRSts,
-        'CPU_T'   : CPU_Temp,
-        'CPU_U'   : CPU_Usage,
         'DISK_total'  : DISK_total,
         'DISK_used'  : DISK_used,
         'DISK_free'  : DISK_left,
         'DISK_P'  : DISK_perc,
-        'current_time'  : current_time,
         'chart_base64'  : chart_base64,
         'battery_percent'  : battery_percent,
         'battery_voltage'  : battery_voltage,
@@ -210,11 +247,18 @@ def upload_file():
             with FTP(ftp_host) as ftp:
                 ftp.login(ftp_user, ftp_password)
                 ftp.storbinary('STOR ' + uploaded_file.filename, uploaded_file)
-                current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                current_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             return 'File uploaded successfully'
-    current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    current_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     return render_template('upload.html')
+
+@socketio.on('connect')
+def handle_connect():
+    client_ip = request.remote_addr
+    print(client_ip,' - Connected')
 
 if __name__ == '__main__':
 #  app.run(host='0.0.0.0', port=8081, debug=True)
-    app.run(host='0.0.0.0', port=8080)
+    socketio.start_background_task(update_stats)
+    print('- WebPage Started')
+    socketio.run(app, host='0.0.0.0', port=8080)
