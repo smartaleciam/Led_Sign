@@ -285,7 +285,7 @@ echo "SIGN - Cleaning up after installing packages"
 apt-get -y clean
 
 echo "SIGN - Installing PIP Modules"
-pip3 install wheel Flask flask-socketio flask_fontawesome paho-mqtt python-gsmmodem pyftpdlib mysql-connector pyserial psutil matplotlib gevent-websocket eventlet
+pip3 install wheel Flask flask-socketio flask_fontawesome paho-mqtt python-gsmmodem pyftpdlib mysql-connector pyserial psutil matplotlib gevent-websocket eventlet ftputil
 
 echo "SIGN - Configuring shellinabox to use /var/tmp"
 echo "SHELLINABOX_DATADIR=/var/tmp/" >> /etc/default/shellinabox
