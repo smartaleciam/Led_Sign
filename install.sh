@@ -272,13 +272,13 @@ apt-get -y clean
 rm -f /etc/pkcs11/modules/gnome-keyring-module
 
 echo "SIGN - Installing required packages"
-apt-get install mc python3-dev python3-pip python3-flask python3-ftputil vsftpd openssl shellinabox sudo git ppp minicom ufw libopenblas-dev unzip mosquitto mosquitto-clients -y
+apt-get install mc python3-dev python3-pip python3-flask python3-ftputil vsftpd openssl shellinabox sudo git ppp minicom ufw libopenblas-dev unzip mosquitto mosquitto-clients logrotate -y
 
 echo "SIGN - Cleaning up after installing packages"
 apt-get -y clean
 
 echo "SIGN - Installing PIP Modules"
-pip3 install wheel Flask flask-socketio flask_fontawesome paho-mqtt python-gsmmodem mysql-connector pyserial psutil matplotlib gevent-websocket ftputil
+pip3 install wheel Flask flask-socketio flask_fontawesome paho-mqtt python-gsmmodem mysql-connector pyserial psutil matplotlib gevent-websocket numpy ftputil
 # pip3 install eventlet pyftpdlib paramiko
 #######################################
 # Setting firewall
