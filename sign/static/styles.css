@@ -16,6 +16,7 @@ ul.menu-bar li {
 }
 
 ul.menu-bar li a {
+    font-size: 16px;
     display: block;
     color: white;
     text-align: center;
@@ -38,7 +39,6 @@ ul.menu-bar li a:hover {
 }
 
 body {
-  font-size: 16px;
   background-color: #f0eaea;
 }
 
@@ -62,3 +62,39 @@ body {
 }
 
 
+.green {
+    background-image: -webkit-linear-gradient(top, #13fB04 0%, #58e343 50%, #ADED99 100%);
+}
+
+.orange {
+    background-image: -webkit-linear-gradient(top, #f9a004 0%, #e0ac45 50%, #ead698 100%);
+}
+
+
+.red {
+    background-image: -webkit-linear-gradient(top, #fb1304 0%, #e35843 50%, #edad99 100%);
+}
+
+
+.led {
+    border-radius: 50px;
+    width: 3px;
+    height: 3px;
+    box-shadow: 0px 0px 2px black;
+    margin: 5px;
+}
+
+.led:after {
+    display: block;            
+    content: '';
+    margin-left: 1px;
+    margin-right: 1px;
+    width: 3px;
+    height: 2px;
+    -webkit-border-top-right-radius: 4px 3px;
+    -webkit-border-top-left-radius: 4px 3px;
+    -webkit-border-bottom-right-radius: 4px 3px;
+    -webkit-border-bottom-left-radius: 4px 3px;
+    background-image: -webkit-linear-gradient(top, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.2) 100%);
+}
+​

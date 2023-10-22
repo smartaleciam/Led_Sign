@@ -5,22 +5,56 @@ import time
 import subprocess
 import re
 import eventlet
-from flask import Flask, render_template, request, redirect, url_for, jsonify
-from flask_socketio import SocketIO
-#from gsmmodem import GsmModem
-from ftplib import FTP
 import psutil
 import matplotlib.pyplot as plt
-from io import BytesIO
 import base64
 import paho.mqtt.client as mqtt
+import os
+import logging
+import requests
+#import paramiko
+from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask_socketio import SocketIO, send, emit
+#from ftplib import FTP, FTP_TLS
+#from ftputil import FTPHost, session, tool
+from io import BytesIO
 from flask_fontawesome import FontAwesome
+#from gsmmodem import GsmModem
 
+##################################################################
+# Set the IP address of the FPP system to control
+FPP_API_URL = 'http://192.168.1.2/api'
+# FTP server settings
+FTP_SERVER_ADDRESS = 'ftp.192.168.1.2'  # Replace with your FTP server's host
+FTP_USER = 'fpp'
+FTP_PASS = 'falcon'
+FTP_PORT = 22   # Use port 22 for FTPS
+##################################################################
+# Set the log file location and log level
+log_file = '/home/smartalec/sign/logs/socketio.log'  # Log to a file
+log_level = 'ERROR'
+logging.basicConfig(level=logging.ERROR)   # Adjust the log level as needed (e.g., INFO, DEBUG, WARNING, and ERROR.)
+file_handler = logging.FileHandler(log_file)
+file_handler.setLevel(log_level)
+formatter = logging.Formatter( '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+file_handler.setFormatter(formatter)
+logger = logging.getLogger()
+logger.addHandler(file_handler)
+#tool.log = logging.getLogger()  # Redirect ftputil logging to the root logger
+###################################################################
 app = Flask(__name__)
+app.logger.addHandler(file_handler)
 app.config['SECRET_KEY'] = 'MontyPython_secret_key'
-socketio = SocketIO(app, async_mode='gevent')  # Use Gevent async mode
+app.config['UPLOAD_FOLDER'] = 'uploads'
+app.config['ALLOWED_EXTENSIONS'] = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}  # Define allowed file extensions
+app.config['MAX_FILE_SIZE'] = 10 * 1024 * 1024  # 10 MB max file size
+#socketio = SocketIO(app, async_mode='gevent')  # Use Gevent async mode
+socketio = SocketIO(app)
 fa = FontAwesome(app)
-
+####################################################################
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
+#####################################################################
 # Setup GPIO's
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
@@ -31,18 +65,12 @@ senPIRSts = GPIO.LOW
 # Set button and PIR sensor pins as an input
 GPIO.setup(button, GPIO.IN)
 GPIO.setup(senPIR, GPIO.IN)
-
-log_file_path = '/var/log/ufw.log'
-
+########################################################################
 # Initialize the SIM7600G-H modem
 #modem = GsmModem('/dev/ttyUSB2')  # Replace with the correct serial port
 #modem.connect()
 
-# FTP server settings
-ftp_host = 'ftp.signs.smartaleclights.com'  # Replace with your FTP server's host
-ftp_user = 'your_ftp_username'
-ftp_password = 'your_ftp_password'
-
+##########################################################################
 # MQTT configuration
 mqtt_broker = "localhost"
 mqtt_port = 1883
@@ -64,7 +92,7 @@ mqtt_client.on_connect = on_connect
 mqtt_client.on_message = on_message
 mqtt_client.connect(mqtt_broker, mqtt_port, 60)
 mqtt_client.loop_start()
-
+#######################################################################
 # UFW Firewall Status
 potential_attacks = []
 def get_ufw_status():
@@ -102,8 +130,7 @@ def getRAMinfo():
 
 # Return % of CPU used by user as a character string                                
 def getCPUuse():
-    return(str(os.popen("top -n1 | awk '/Cpu\(s\):/ {print $2}'").readline().strip(\
-)))
+    return str(psutil.cpu_percent(interval=1))
 
 def getDiskSpace():
     p = os.popen("df -h /")
@@ -118,13 +145,22 @@ def update_stats():
     while True:
         current_time = datetime.datetime.utcnow().strftime('%H:%M:%S')
         socketio.emit('update_time', current_time)
-        cpu_temp = getCPUtemperature()
+        cpu_temp = getCPUtemperature()  # Get CPU Temperature
         socketio.emit('cpu_temp', cpu_temp)
         cpu_usage = getCPUuse()
         socketio.emit('cpu_usage', cpu_usage)
         DISK_stats = getDiskSpace()
         disk_left = DISK_stats[2]
         socketio.emit('disk_free', disk_left)
+        battery = psutil.sensors_battery()  # Get battery status and info
+        if battery is not None:
+            battery_percent = battery.percent
+            battery_voltage = battery.volt
+        else:
+            battery_percent = "N/A"
+            battery_voltage = "N/A"
+        socketio.emit('batt_volt', battery_voltage)
+        socketio.emit('batt_percent', battery_percent)
 
         socketio.sleep(1)  # Emit updates every second
 
@@ -167,17 +203,7 @@ def home():
     # Convert the chart to a base64-encoded image
     chart_base64 = base64.b64encode(chart_image.read()).decode('utf-8')
 
-    # Get battery status and info
-    battery = psutil.sensors_battery()
-    if battery is not None:
-        battery_percent = battery.percent
-        battery_voltage = battery.volt
-    else:
-        battery_percent = "N/A"
-        battery_voltage = "N/A"
-
     # Render the HTML template with the chart
- 
     templateData = {
         'button'  : buttonSts,
         'senPIR'  : senPIRSts,
@@ -185,10 +211,8 @@ def home():
         'DISK_used'  : DISK_used,
         'DISK_free'  : DISK_left,
         'DISK_P'  : DISK_perc,
-        'chart_base64'  : chart_base64,
-        'battery_percent'  : battery_percent,
-        'battery_voltage'  : battery_voltage,
-    }
+        'chart_base64'  : chart_base64
+     }
     return render_template('index.html', **templateData)
 
 @app.route('/get_firewall_status')
@@ -212,7 +236,6 @@ def get_marker_locations():
 
 @app.route('/send_sms')
 def send_sms():
-    
     return render_template('send_sms.html')
 
 @app.route('/sending_sms', methods=['POST'])
@@ -229,36 +252,88 @@ def receive_sms():
     messages = 'hello'
     return render_template('receive_sms.html', messages=messages)
 
+@app.route('/fpp_connect')
+def fpp_commands():
+#   Access the FPP Rasp Pi over API commands    
+    return render_template('fpp_connect.html')
+
+@app.route('/ftp_directory')
+def ftp_directory():
+#    ssh = paramiko.SSHClient()
+# automatically add keys without requiring human intervention
+#    ssh.set_missing_host_key_policy( paramiko.AutoAddPolicy() )
+#    ssh.connect(FTP_SERVER_ADDRESS, username=FTP_USER, password=FTP_PASS)
+#    ftp = ssh.open_sftp()
+#    directory_files = ftp.listdir()
+    directory_files = 'hello'
+    return render_template('ftp_directory.html', directory_files=directory_files)
+
 @app.route('/update_gps', methods=['POST'])
 def update_gps():
     data = request.json  # Assuming data is sent as JSON
     latitude = data['latitude']
     longitude = data['longitude']
-    
     # Process and store GPS data as needed (e.g., in a database)
 
     return jsonify({"message": "GPS data received successfully"})
 
-@app.route('/upload', methods=['GET', 'POST'])
+@app.route('/upload_file')
 def upload_file():
+    return render_template('upload_file.html')
+
+@app.route('/ftp_upload', methods=['GET', 'POST'])
+def ftp_upload():
     if request.method == 'POST':
-        uploaded_file = request.files['file']
-        if uploaded_file.filename != '':
-            with FTP(ftp_host) as ftp:
-                ftp.login(ftp_user, ftp_password)
-                ftp.storbinary('STOR ' + uploaded_file.filename, uploaded_file)
-                current_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            return 'File uploaded successfully'
-    current_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    return render_template('upload.html')
+        try:
+            file = request.files['file']
+            if file:
+                with FTP(FTP_SERVER_ADDRESS) as ftp:
+                    ftp.login(FTP_USER, FTP_PASS)
+                     # Define the target directory on the FTP server (e.g., /media/)
+                    target_directory = '/media/'
+
+                    # Save the file locally
+                    local_file_path = f"{target_directory}{file.filename}"
+                    with open(local_file_path, 'wb') as local_file:
+                        file.save(local_file)
+
+                    # Upload the file to the FTP server
+                    with open(local_file_path, 'rb') as local_file:
+                        ftp.storbinary(f"STOR {local_file_path}", local_file)
+
+                    # List the contents of the FTP directory
+                    directory_contents = ftp.nlst(target_directory)
+
+                socketio.emit('file_uploaded', file.filename)
+        except Exception as e:
+            socketio.emit('file_upload_error', str(e))
+    return render_template('ftp_upload.html')
+
+###################################################################################
 
 @socketio.on('connect')
 def handle_connect():
     client_ip = request.remote_addr
     print(client_ip,' - Connected')
 
+@socketio.on('send_fpp')
+def handle_command(data):
+    command = data['command']
+    try:
+        response = requests.get(f"{FPP_API_URL}/{command}")
+        if response.status_code == 200:
+            result = response.json()
+            socketio.emit('command_response', result)
+        else:
+            socketio.emit('command_response', {'error': 'Command failed'})
+    except Exception as e:
+        socketio.emit('command_response', {'error': str(e)})
+
+####################################################################################
+
 if __name__ == '__main__':
 #  app.run(host='0.0.0.0', port=8081, debug=True)
     socketio.start_background_task(update_stats)
+    eventlet.monkey_patch()
     print('- WebPage Started')
     socketio.run(app, host='0.0.0.0', port=8080)

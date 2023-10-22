@@ -1,0 +1,9 @@
+{% include 'menu.html' %}
+    <h1>FTP Directory Contents</h1>
+    <ul>
+        {% for item in directory_files %}
+            <li>{{ item }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

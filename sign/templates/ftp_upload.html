@@ -1,0 +1,33 @@
+{% include 'menu.html' %}
+    <h1>FTP File Upload</h1>
+    <ul id="response"></ul>
+    <ul>
+        {% for item in directory_contents %}
+            <li>{{ item }}</li>
+        {% endfor %}
+    </ul>
+
+    
+    <form method="POST" enctype="multipart/form-data">
+        <input type="file" name="file">
+        <button type="submit" id="upload">Upload File to FTP</button>
+    </form>
+<script>
+    const uploadButton = document.getElementById('upload');
+    const responseDiv = document.getElementById('response');
+    const directoryContentsList = document.getElementById('directory-contents');
+
+    socket.on('file_uploaded', (filename) => {
+        responseDiv.innerHTML = `File '${filename}' uploaded to FTP server.`;
+    });
+
+    socket.on('file_upload_error', (error) => {
+        responseDiv.innerHTML = `File upload failed: ${error}`;
+    });
+
+    socket.on('directory_contents', (contents) => {
+        directoryContentsList.innerHTML = contents.map(item => `<li>${item}</li>`).join('');
+    });
+</script>
+</body>
+</html>

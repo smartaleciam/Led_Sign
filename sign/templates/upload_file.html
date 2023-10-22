@@ -1,0 +1,102 @@
+{% include 'menu.html' %}
+<style>
+
+/* Custom CSS styles for the dropbox */
+#dropbox {
+    border: 2px dashed #007bff; /* Custom border style */
+    border-radius: 10px; /* Rounded corners */
+    background-color: #f0f0f0; /* Background color */
+    text-align: center;
+    padding: 20px;
+    font-size: 20px;
+    color: #007bff; /* Text color */
+    cursor: pointer;
+}
+
+#progress-bars {
+    margin-top: 10px;
+}
+.progress-bar {
+    width: 100%;
+    background-color: #007bff;
+    height: 20px;
+    text-align: center;
+    line-height: 20px;
+    color: white;
+}
+
+/* Error message style */
+.error {
+    color: red;
+}
+
+</style>
+    <h1>Upload Files</h1>
+    <br>
+    <div id="dropbox">Drag and drop files or <label for="fileInput" style="cursor: pointer; color: #007bff; text-decoration: underline;">browse</label></div>
+    <input type="file" id="fileInput" multiple style="display: none;">
+    <div id="progress-bars"></div>
+    <div id="error" style="color: red;"></div>
+  
+     <script>
+        const dropbox = document.getElementById('dropbox');
+        const fileInput = document.getElementById('fileInput');
+        const progressBars = document.getElementById('progress-bars');
+        const error = document.getElementById('error');
+
+        dropbox.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+        });
+
+        dropbox.addEventListener('drop', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const files = e.dataTransfer.files;
+            handleFileSelection(files);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            const files = e.target.files;
+            handleFileSelection(files);
+        });
+       
+        function handleFileSelection(files) {
+            error.textContent = '';
+            for (const file of files) {
+                const progressBar = document.createElement('div');
+                progressBar.className = 'progress-bar';
+                progressBar.textContent = `${file.name}: 0%`;
+                progressBars.appendChild(progressBar);
+
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    socket.emit('upload', { filename: file.name, file: event.target.result });
+                };
+                reader.readAsArrayBuffer(file);
+            }
+        }
+
+        socket.on('progress', (data) => {
+            const progressBar = document.querySelector(`.progress-bar:contains('${data.filename}')`);
+            if (progressBar) {
+                const percent = Math.round((data.progress / data.total) * 100);
+                progressBar.textContent = `${data.filename}: ${percent}%`;
+                progressBar.style.width = `${percent}%`;
+            }
+        });
+
+       socket.on('complete', (filename) => {
+            const progressBar = document.querySelector(`.progress-bar:contains('${filename}')`);
+            if (progressBar) {
+                progressBar.textContent = `${filename}: 100% (Complete)`;
+            }
+        });
+
+        socket.on('error', (message) => {
+            error.textContent = message;
+        });
+    </script>
+</body>
+</html>

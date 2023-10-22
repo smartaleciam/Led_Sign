@@ -1,0 +1,40 @@
+{% include 'menu.html' %}
+    <h1>Falcon Player (FPP) API Interface</h1>
+    <input type="text" id="command" placeholder="Enter FPP API command">
+    <button id="send">Send Command</button>
+    <div id="response"></div>
+
+    <script>
+        const commandInput = document.getElementById('command');
+        const sendButton = document.getElementById('send');
+        const responseTable = document.getElementById('response');
+
+        sendButton.addEventListener('click', () => {
+            const command = commandInput.value;
+            if (command) {
+                socket.emit('send_fpp', { command });
+            }
+        });
+
+        socket.on('command_response', (response) => {
+            const tableHTML = generateTable(response);
+//            responseDiv.innerHTML = JSON.stringify(response, null, 2);
+            responseTable.innerHTML = tableHTML;
+        });
+        function generateTable(data) {
+            let tableHTML = '<table border="1">';
+            for (const key in data) {
+                if (data.hasOwnProperty(key)) {
+                    tableHTML += '<tr>';
+                    tableHTML += `<td><strong>${key}</strong></td>`;
+                    tableHTML += `<td>${typeof data[key] === 'object' ? generateTable(data[key]) : data[key]}</td>`;
+                    tableHTML += '</tr>';
+                }
+            }
+            tableHTML += '</table>';
+            tableHTML += JSON.stringify(response, null, 2);
+            return tableHTML;
+        }
+    </script>
+</body>
+</html>

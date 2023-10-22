@@ -1,10 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sign - Control System</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='notifications.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script src="{{ url_for('static', filename='notifications.js') }}"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
     <ul class="menu-bar">
     <li><a href="/">Home</a></li>
     <li><a href="/send_sms">Send SMS</a></li>
     <li><a href="/receive_sms">Receive SMS</a></li>
-    <li><a href="/upload">Upload File</a></li>
-  <!--
+    <li><a href="/upload_file">Upload File</a></li>
+    <li><a href="/fpp_connect">FPP Access</a></li>
+    <li><a href="/ftp_upload">FTP Upload</a></li>
+    <li><a href="/ftp_directory">FTP Dir</a></li>
+<!--
 
 <div class="invert">
   <span class="fa fa-1x inactive fa-signal"></span>
@@ -28,6 +43,7 @@
     <span class="fas fa-square-full inactive" data-fa-mask="fas fa-signal" data-fa-transform="left-2"></span>
   </div>
 -->
+  <lii id="led_status" class="red led"></lii>
   <lii>Signal:
     <span class="fa fa-1x fa-signal"></span>    <!-- Full signal -->
     <span class="fa fa-1x inactive fa-signal"></span>   <!-- No signal -->
@@ -45,11 +61,11 @@
 
 </ul>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
 <script type="text/javascript">
         var socket = io.connect('http://' + document.domain + ':' + location.port);
-//        socket.on('connect', function() {   console.log('Connected to the server');   });
-        socket.on('update_time', function(data) {   
+        socket.on('connect', function() {     var statusElement = document.getElementById('led_status');    statusElement.className = 'green led';   });
+
+          socket.on('update_time', function(data) {   
           var utcTime = new Date(data + ' UTC');  // Parse UTC time
           var localTime = utcTime.toLocaleTimeString();  // Convert to local time
           document.getElementById('s_time').textContent = data;
@@ -57,4 +73,116 @@
         socket.on('cpu_temp', function(data) {   document.getElementById('cpu_temp').textContent = data;   });
         socket.on('cpu_usage', function(data) {   document.getElementById('cpu_usage').textContent = data;   });
         socket.on('disk_free', function(data) {   document.getElementById('disk_free').textContent = data;   });
+        socket.on('batt_volt', function(data) {   document.getElementById('batt_volt').textContent = data;   });
+        socket.on('batt_percent', function(data) {   document.getElementById('batt_percent').textContent = data;   });
+
+        socket.on('disconnect', function(reason) {
+          console.log('Connection has been disconnected.', reason);
+          if (reason === 'ping timeout') {     var statusElement = document.getElementById('led_status');    statusElement.className = 'orange led';   }
+          if (reason === 'transport close') {      var statusElement = document.getElementById('led_status');    statusElement.className = 'red led';    }
+        });
+ 
+        socket.on('reconnect', function() {
+          var statusElement = document.getElementById('led_status');
+          statusElement.className = 'green led';   
+          console.log('Connection has been reestablished.');
+        });
+        
+function NotificationMessages() {
+//    return [
+//        {
+//			icon: "error",
+//			title: "Oh No",
+//			subtitle: "Something really bad happened.",
+//			actions: ["Close"]
+//		},
+//		{
+//			icon: "error",
+//			title: "Error",
+//			subtitle: "The operation completed successfully.",
+//			actions: ["OK"]
+//		},
+//		{
+//			icon: "error",
+//			title: "Critical Error",
+//			subtitle: "An error has occurred while trying to display an error notification.",
+//			actions: ["OK"]
+//		},
+//		{
+//			icon: "warning",
+//			title: "Failed to Save Changes",
+//			actions: ["Retry","Cancel"]
+//		},
+//		{
+//			icon: "warning",
+//			title: "Download Failed",
+//			actions: ["Retry","Cancel"]
+//		},
+//		{
+//			icon: "warning",
+//			title: "Notifications",
+//			subtitle: "Notifications may include alerts, sounds, and icon badges.",
+//			actions: ["Don’t Allow","Allow"]
+//		},
+//		{
+//			icon: "success",
+//			title: "Changes Saved",
+//			actions: ["OK"]
+//		},
+//		{
+//			icon: "success",
+//			title: "Download Complete",
+//			actions: ["OK"]
+//		},
+//		{
+//			icon: "message",
+//			title: "Mail Password Required",
+//			subtitle: "Enter your password for user@domain.com.",
+//			actions: ["Close","Continue"]
+//		},
+//		{
+//			icon: "clock",
+//			title: "Coffee Break",
+//			subtitle: "In 5 minutes",
+//			actions: ["Close","Snooze"]
+//		},
+//		{
+//			icon: "up",
+//			title: "Upgrade Now",
+//			subtitle: "The current version will soon be obsolete. What are you waiting for?",
+//			actions: ["Install","Details"]
+//		}
+//	];
+}
+        
 </script>
+
+<svg display="none">
+	<symbol id="clock" viewBox="0 0 32 32" >
+		<circle r="15" cx="16" cy="16" fill="none" stroke="currentColor" stroke-width="2" />
+		<polyline points="16,7 16,16 23,16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+	</symbol>
+	<symbol id="error" viewBox="0 0 32 32" >
+		<circle r="15" cx="16" cy="16" fill="none" stroke="hsl(13,90%,55%)" stroke-width="2" />
+		<line x1="10" y1="10" x2="22" y2="22" stroke="hsl(13,90%,55%)" stroke-width="2" stroke-linecap="round" />
+		<line x1="22" y1="10" x2="10" y2="22" stroke="hsl(13,90%,55%)" stroke-width="2" stroke-linecap="round" />
+	</symbol>
+	<symbol id="message" viewBox="0 0 32 32" >
+		<polygon points="1,6 31,6 31,26 1,26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+		<polyline points="1,6 16,18 31,6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+	</symbol>
+	<symbol id="success" viewBox="0 0 32 32" >
+		<circle r="15" cx="16" cy="16" fill="none" stroke="hsl(93,90%,40%)" stroke-width="2" />
+		<polyline points="9,18 13,22 23,12" fill="none" stroke="hsl(93,90%,40%)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+	</symbol>
+	<symbol id="up" viewBox="0 0 32 32" >
+		<circle r="15" cx="16" cy="16" fill="none" stroke="currentColor" stroke-width="2" />
+		<polyline points="11,15 16,10 21,15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+		<line x1="16" y1="10" x2="16" y2="22" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+	</symbol>
+	<symbol id="warning" viewBox="0 0 32 32" >
+		<polygon points="16,1 31,31 1,31" fill="none" stroke="hsl(33,90%,55%)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+		<line x1="16" y1="12" x2="16" y2="20" stroke="hsl(33,90%,55%)" stroke-width="2" stroke-linecap="round" />
+		<line x1="16" y1="25" x2="16" y2="25" stroke="hsl(33,90%,55%)" stroke-width="3" stroke-linecap="round" />
+	</symbol>
+</svg>
