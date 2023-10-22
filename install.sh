@@ -209,6 +209,8 @@ else
 echo "SIGN - Setting hostname"
 echo "SIGN" > /etc/hostname
 hostname SIGN
+# Enable SSH terminal Login
+systemctl enable ssh.socket
 
 #######################################
 # Add SIGN hostname entry
@@ -242,14 +244,13 @@ EOF
 cp /etc/issue.new /etc/issue
 rm /etc/issue.new
 
-
 #######################################
 echo "SIGN - Setting US keyboard layout and locale"
 sed -i 's/^\(en_GB.UTF-8\)/# \1/;s/..\(en_AU.UTF-8\)/\1/' /etc/locale.gen
 sed -i "s/XKBLAYOUT=".*"/XKBLAYOUT="us"/" /etc/default/keyboard
 echo "LANG=en_AU.UTF-8" > /etc/default/locale
+echo "LC_MESSAGES=en_AU.UTF-8" > /etc/default/locale
 export LANG=en_AU.UTF-8
-
 # end of if desktop
 fi
 
