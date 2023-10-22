@@ -205,14 +205,6 @@ else
 # Bunch of configuration we wont do if installing onto desktop
 # We shouldn't set the hostname or muck with the issue files, keyboard, etc...
 #######################################
-# Setting firewall
-sudo ufw logging on
-echo "SIGN - Setting up firewall"
-sudo ufw allow 22
-sudo ufw allow 8080
-sudo systemctl start ufw
-
-#######################################
 # Setting hostname
 echo "SIGN - Setting hostname"
 echo "SIGN" > /etc/hostname
@@ -287,6 +279,14 @@ apt-get -y clean
 echo "SIGN - Installing PIP Modules"
 pip3 install wheel Flask flask-socketio flask_fontawesome paho-mqtt python-gsmmodem mysql-connector pyserial psutil matplotlib gevent-websocket ftputil
 # pip3 install eventlet pyftpdlib paramiko
+#######################################
+# Setting firewall
+sudo ufw logging on
+echo "SIGN - Setting up firewall"
+sudo ufw allow 22
+sudo ufw allow 8080
+sudo systemctl start ufw
+
 
 echo "SIGN - Configuring shellinabox to use /var/tmp"
 echo "SHELLINABOX_DATADIR=/var/tmp/" >> /etc/default/shellinabox
