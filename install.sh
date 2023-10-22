@@ -278,8 +278,8 @@ echo "SIGN - Cleaning up after installing packages"
 apt-get -y clean
 
 echo "SIGN - Installing PIP Modules"
-pip3 install wheel Flask flask-socketio flask_fontawesome paho-mqtt python-gsmmodem mysql-connector pyserial psutil matplotlib gevent-websocket numpy ftputil
-# pip3 install eventlet pyftpdlib paramiko
+pip3 install wheel Flask flask-socketio flask_fontawesome paho-mqtt python-gsmmodem mysql-connector pyserial psutil matplotlib gevent-websocket numpy ftputil eventlet
+# pip3 install pyftpdlib paramiko
 #######################################
 # Setting firewall
 sudo ufw logging on
