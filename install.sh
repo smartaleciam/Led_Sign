@@ -209,6 +209,7 @@ else
 echo "SIGN - Setting hostname"
 echo "SIGN" > /etc/hostname
 hostname SIGN
+
 # Enable SSH terminal Login
 systemctl enable ssh.socket
 
@@ -278,8 +279,8 @@ echo "SIGN - Cleaning up after installing packages"
 apt-get -y clean
 
 echo "SIGN - Installing PIP Modules"
-pip3 install wheel Flask flask-socketio flask_fontawesome paho-mqtt python-gsmmodem mysql-connector pyserial psutil matplotlib gevent-websocket numpy ftputil eventlet
-# pip3 install pyftpdlib paramiko
+pip3 install wheel Flask flask-socketio flask_fontawesome paho-mqtt python-gsmmodem mysql-connector pyserial psutil matplotlib gevent-websocket numpy ftputil eventlet pyftpdlib
+# pip3 install  paramiko
 #######################################
 # Setting firewall
 sudo ufw logging on
