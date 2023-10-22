@@ -272,7 +272,7 @@ apt-get -y clean
 rm -f /etc/pkcs11/modules/gnome-keyring-module
 
 echo "SIGN - Installing required packages"
-apt-get install mc python3-dev python3-pip python3-flask python3-ftputil vsftpd shellinabox sudo git ppp minicom ufw libopenblas-dev unzip mosquitto mosquitto-clients -y
+apt-get install mc python3-dev python3-pip python3-flask python3-ftputil vsftpd openssl shellinabox sudo git ppp minicom ufw libopenblas-dev unzip mosquitto mosquitto-clients -y
 
 echo "SIGN - Cleaning up after installing packages"
 apt-get -y clean
