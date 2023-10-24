@@ -1,3 +1,4 @@
+
 /* Reset default list styles */
 ul {
     list-style: none;
@@ -7,6 +8,10 @@ ul {
 
 /* Style the menu bar */
 ul.menu-bar {
+    background-color: #313;
+    overflow: hidden;
+}
+ul.menu-bar1 {
     background-color: #333;
     overflow: hidden;
 }
@@ -24,9 +29,9 @@ ul.menu-bar li a {
     text-decoration: none;
 }
 
-ul.menu-bar lii {
+ul.menu-bar1 lii {
     font-size: 12px;
-    float: right;
+    float: left;
     display: block;
     color: white;
     text-align: center;

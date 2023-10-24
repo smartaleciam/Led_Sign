@@ -12,11 +12,11 @@ import paho.mqtt.client as mqtt
 import os
 import logging
 import requests
-#import paramiko
+import paramiko
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask_socketio import SocketIO, send, emit
-#from ftplib import FTP, FTP_TLS
-#from ftputil import FTPHost, session, tool
+from ftplib import FTP, FTP_TLS
+from ftputil import FTPHost, session, tool
 from io import BytesIO
 from flask_fontawesome import FontAwesome
 #from gsmmodem import GsmModem
@@ -256,6 +256,10 @@ def receive_sms():
 def fpp_commands():
 #   Access the FPP Rasp Pi over API commands    
     return render_template('fpp_connect.html')
+
+@app.route('/shell')
+def shell():
+    return render_template('shell.html')
 
 @app.route('/ftp_directory')
 def ftp_directory():

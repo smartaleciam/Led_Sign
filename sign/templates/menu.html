@@ -11,14 +11,38 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
-    <ul class="menu-bar">
+<ul class="menu-bar1">
+  <lii id="led_status1" class="red led"></lii>  <!-- status led for the sim7600 data stream -->
+  <lii id="led_status" class="red led"></lii>  <!-- status led for the Main Web Page -->
+  <lii>Signal:
+    <span class="fa fa-1x fa-signal"></span>    <!-- Full signal -->
+    <span class="fa fa-1x inactive fa-signal"></span>   <!-- No signal -->
+  </lii>
+
+    <lii class="fas fa-sd-card">&nbsp&nbsp Free: <i id="disk_free"></i></lii>
+
+    <lii class="fas fa-battery-full">&nbsp&nbsp Voltage: <i id="batt_volt"></i>V</lii>
+    <lii class="fas fa-battery-three-quarters">&nbsp&nbsp Battery: <i id="batt_percent"></i>%</lii>
+
+    <lii class="fas fa-clock">&nbsp&nbsp <i id="s_time"></i></lii>
+
+    <lii class="fa fa-thermometer-half">&nbsp&nbsp Cpu Temp: <i id="cpu_temp"></i>c</lii>
+    <lii class="fas fa-microchip">&nbsp&nbsp Cpu Load: <i id="cpu_usage"></i>%</lii>
+</ul>
+
+  <ul class="menu-bar">
     <li><a href="/">Home</a></li>
     <li><a href="/send_sms">Send SMS</a></li>
     <li><a href="/receive_sms">Receive SMS</a></li>
     <li><a href="/upload_file">Upload File</a></li>
     <li><a href="/fpp_connect">FPP Access</a></li>
+    <li><a href="/shell" onclick="shell(); return false;">Shell Access</a></li>
     <li><a href="/ftp_upload">FTP Upload</a></li>
     <li><a href="/ftp_directory">FTP Dir</a></li>
+    <script type="text/javascript">
+      function shell() {    window.open('http://192.168.1.140:4200', '_blank');        }            // Use JavaScript to open a new page in a new tab or window
+    </script>
+</ul>
 <!--
 
 <div class="invert">
@@ -43,29 +67,15 @@
     <span class="fas fa-square-full inactive" data-fa-mask="fas fa-signal" data-fa-transform="left-2"></span>
   </div>
 -->
-  <lii id="led_status" class="red led"></lii>
-  <lii>Signal:
-    <span class="fa fa-1x fa-signal"></span>    <!-- Full signal -->
-    <span class="fa fa-1x inactive fa-signal"></span>   <!-- No signal -->
-  </lii>
 
-    <lii class="fas fa-sd-card">&nbsp&nbsp Free: <i id="disk_free"></i></lii>
 
-    <lii class="fas fa-battery-full">&nbsp&nbsp Voltage: <i id="batt_volt"></i>V</lii>
-    <lii class="fas fa-battery-three-quarters">&nbsp&nbsp Battery: <i id="batt_percent"></i>%</lii>
-
-    <lii class="fas fa-clock">&nbsp&nbsp <i id="s_time"></i></lii>
-
-    <lii class="fa fa-thermometer-half">&nbsp&nbsp Cpu Temp: <i id="cpu_temp"></i>c</lii>
-    <lii class="fas fa-microchip">&nbsp&nbsp Cpu Load: <i id="cpu_usage"></i>%</lii>
-
-</ul>
+<script src="{{ url_for('static', filename='system_updates.js') }}"></script>
 
 <script type="text/javascript">
         var socket = io.connect('http://' + document.domain + ':' + location.port);
         socket.on('connect', function() {     var statusElement = document.getElementById('led_status');    statusElement.className = 'green led';   });
 
-          socket.on('update_time', function(data) {   
+        socket.on('update_time', function(data) {   
           var utcTime = new Date(data + ' UTC');  // Parse UTC time
           var localTime = utcTime.toLocaleTimeString();  // Convert to local time
           document.getElementById('s_time').textContent = data;
@@ -87,75 +97,8 @@
           statusElement.className = 'green led';   
           console.log('Connection has been reestablished.');
         });
-        
-function NotificationMessages() {
-//    return [
-//        {
-//			icon: "error",
-//			title: "Oh No",
-//			subtitle: "Something really bad happened.",
-//			actions: ["Close"]
-//		},
-//		{
-//			icon: "error",
-//			title: "Error",
-//			subtitle: "The operation completed successfully.",
-//			actions: ["OK"]
-//		},
-//		{
-//			icon: "error",
-//			title: "Critical Error",
-//			subtitle: "An error has occurred while trying to display an error notification.",
-//			actions: ["OK"]
-//		},
-//		{
-//			icon: "warning",
-//			title: "Failed to Save Changes",
-//			actions: ["Retry","Cancel"]
-//		},
-//		{
-//			icon: "warning",
-//			title: "Download Failed",
-//			actions: ["Retry","Cancel"]
-//		},
-//		{
-//			icon: "warning",
-//			title: "Notifications",
-//			subtitle: "Notifications may include alerts, sounds, and icon badges.",
-//			actions: ["Don’t Allow","Allow"]
-//		},
-//		{
-//			icon: "success",
-//			title: "Changes Saved",
-//			actions: ["OK"]
-//		},
-//		{
-//			icon: "success",
-//			title: "Download Complete",
-//			actions: ["OK"]
-//		},
-//		{
-//			icon: "message",
-//			title: "Mail Password Required",
-//			subtitle: "Enter your password for user@domain.com.",
-//			actions: ["Close","Continue"]
-//		},
-//		{
-//			icon: "clock",
-//			title: "Coffee Break",
-//			subtitle: "In 5 minutes",
-//			actions: ["Close","Snooze"]
-//		},
-//		{
-//			icon: "up",
-//			title: "Upgrade Now",
-//			subtitle: "The current version will soon be obsolete. What are you waiting for?",
-//			actions: ["Install","Details"]
-//		}
-//	];
-}
-        
 </script>
+
 
 <svg display="none">
 	<symbol id="clock" viewBox="0 0 32 32" >
