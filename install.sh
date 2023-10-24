@@ -352,7 +352,8 @@ fi
 if [ cd /${SIGNHOME}/logs 2> /dev/null]
 then
     mkdir ${SIGNHOME}/logs
-    chown 777 ${SIGNHOME}/logs
+    #chown ${SIGNUSER}.${SIGNUSER} ${SIGNHOME}/logs
+    chmod -R 777 ${SIGNHOME}/logs
 fi
 #if [ cd /${SIGNHOME}/.bashrc 2> /dev/null]
 #then
