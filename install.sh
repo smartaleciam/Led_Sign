@@ -2,7 +2,7 @@
 
 # Led Trailer Sign Install Script
 SIGNBRANCH=${SIGNBRANCH:-"master"}
-SIGNIMAGEVER="2023-10-25"
+SIGNIMAGEVER="2023-10-26"
 SIGNCFGVER="1.1"
 SIGNPLATFORM="UNKNOWN"
 SIGNDIR=/opt/sign
@@ -352,7 +352,7 @@ fi
 if [ cd /${SIGNHOME}/logs 2> /dev/null]
 then
     mkdir ${SIGNHOME}/logs
-    chown 755 ${SIGNHOME}/logs
+    chown 777 ${SIGNHOME}/logs
 fi
 #if [ cd /${SIGNHOME}/.bashrc 2> /dev/null]
 #then
