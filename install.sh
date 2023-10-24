@@ -2,7 +2,7 @@
 
 # Led Trailer Sign Install Script
 SIGNBRANCH=${SIGNBRANCH:-"master"}
-SIGNIMAGEVER="2023-10-26"
+SIGNIMAGEVER="2023-10-27"
 SIGNCFGVER="1.2"
 SIGNPLATFORM="UNKNOWN"
 SIGNDIR=/opt/sign
@@ -377,6 +377,7 @@ cp /opt/sign/etc/update-motd.d/* /etc/update-motd.d/
 cp /opt/sign/etc/logrotate.d/* /etc/logrotate.d/
 cd ${SIGNHOME} 2> /dev/null || mkdir ${SIGNHOME}
 cp -R /opt/sign/sign/* ${SIGNHOME}/
+cp -R /opt/sign/sim7600g-h/* ${SIGNHOME}/../sim7600g-h/
 
 #######################################
 echo "SIGN - Enabling System Service"
