@@ -2,8 +2,8 @@
 
 # Led Trailer Sign Install Script
 SIGNBRANCH=${SIGNBRANCH:-"master"}
-SIGNIMAGEVER="2023-10-25"
-SIGNCFGVER="1.1"
+SIGNIMAGEVER="2023-10-26"
+SIGNCFGVER="1.2"
 SIGNPLATFORM="UNKNOWN"
 SIGNDIR=/opt/sign
 SIGNUSER=smartalec
@@ -345,15 +345,15 @@ git config --global --add safe.directory /opt/sign
 echo "SIGN - Populating ${SIGNHOME}"
 if [ cd /${SIGNHOME}/.ssh 2> /dev/null]
 then
-    mkdir ${SIGNHOME}/.ssh
-    #chown ${SIGNUSER}.${SIGNUSER} ${SIGNHOME}/.ssh
-    chmod 700 ${SIGNHOME}/.ssh
+    sudo mkdir ${SIGNHOME}/.ssh
+    sudo chown ${SIGNUSER}.${SIGNUSER} ${SIGNHOME}/.ssh
+    sudo chmod 700 ${SIGNHOME}/.ssh
 fi
 if [ cd /${SIGNHOME}/logs 2> /dev/null]
 then
-    mkdir ${SIGNHOME}/logs
+    sudo mkdir ${SIGNHOME}/logs
     #chown ${SIGNUSER}.${SIGNUSER} ${SIGNHOME}/logs
-    chmod -R 777 ${SIGNHOME}/logs
+    sudo chmod -R 777 ${SIGNHOME}/logs
 fi
 #if [ cd /${SIGNHOME}/.bashrc 2> /dev/null]
 #then
@@ -373,7 +373,8 @@ cp /opt/sign/etc/systemd/system/* /etc/systemd/system/
 cd /etc/ppp/gprs 2> /dev/null || mkdir /etc/ppp/gprs
 cp /opt/sign/etc/ppp/gprs/* /etc/ppp/gprs/
 #cp /opt/sign/etc/chatscripts/* /etc/chatscripts/
-cp /opt/sign/etc/motd /etc/
+cp /opt/sign/etc/update-motd.d/* /etc/update-motd.d/
+cp /opt/sign/etc/logrotate.d/* /etc/logrotate.d/
 cd ${SIGNHOME} 2> /dev/null || mkdir ${SIGNHOME}
 cp -R /opt/sign/sign/* ${SIGNHOME}/
 
