@@ -282,6 +282,9 @@ echo "SIGN - Installing PIP Modules"
 pip3 install wheel Flask flask-socketio flask_fontawesome paho-mqtt python-gsmmodem mysql-connector pyserial psutil matplotlib gevent-websocket numpy ftputil eventlet pyftpdlib
 # pip3 install  paramiko
 #######################################
+clear   # clears the screen
+#######################################
+
 # Setting firewall
 sudo ufw logging on
 echo "SIGN - Setting up firewall"
