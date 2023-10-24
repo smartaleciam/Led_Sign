@@ -2,7 +2,7 @@
 
 # Led Trailer Sign Install Script
 SIGNBRANCH=${SIGNBRANCH:-"master"}
-SIGNIMAGEVER="2023-10-23"
+SIGNIMAGEVER="2023-10-25"
 SIGNCFGVER="1.1"
 SIGNPLATFORM="UNKNOWN"
 SIGNDIR=/opt/sign
@@ -280,7 +280,7 @@ apt-get -y clean
 
 echo "SIGN - Installing PIP Modules"
 pip3 install wheel Flask flask-socketio flask_fontawesome paho-mqtt python-gsmmodem mysql-connector pyserial psutil matplotlib gevent-websocket numpy ftputil eventlet pyftpdlib
-# pip3 install  paramiko
+
 #######################################
 clear   # clears the screen
 #######################################
