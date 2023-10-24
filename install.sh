@@ -2,12 +2,12 @@
 
 # Led Trailer Sign Install Script
 SIGNBRANCH=${SIGNBRANCH:-"master"}
-SIGNIMAGEVER="2023-10-26"
+SIGNIMAGEVER="2023-10-25"
 SIGNCFGVER="1.1"
 SIGNPLATFORM="UNKNOWN"
 SIGNDIR=/opt/sign
-SIGNUSER=smartalec/sign
-SIGNHOME=/home/${SIGNUSER}
+SIGNUSER=smartalec
+SIGNHOME=/home/${SIGNUSER}/sign
 OSVER="UNKNOWN"
 
 # Make sure the sbin directories are on the path as we will
