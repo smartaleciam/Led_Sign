@@ -2,7 +2,7 @@
 
 # Led Trailer Sign Install Script
 SIGNBRANCH=${SIGNBRANCH:-"master"}
-SIGNIMAGEVER="2023-10-24"
+SIGNIMAGEVER="2023-10-25"
 SIGNCFGVER="1.1"
 SIGNPLATFORM="UNKNOWN"
 SIGNDIR=/opt/sign
@@ -291,7 +291,7 @@ echo "SIGN - Setting up firewall"
 sudo ufw allow 22
 sudo ufw allow 8080
 sudo systemctl start ufw
-
+sudo ufw enable
 
 echo "SIGN - Configuring shellinabox to use /var/tmp"
 echo "SHELLINABOX_DATADIR=/var/tmp/" >> /etc/default/shellinabox
