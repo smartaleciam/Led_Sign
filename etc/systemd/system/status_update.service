@@ -1,0 +1,13 @@
+[Unit]
+Description=Sign - Status Updater
+After=network.target
+
+[Service]
+Type=simple
+Restart=always
+WorkingDirectory=/home/smartalec/sign/
+User=smartalec
+ExecStart=/usr/bin/python3 /home/smartalec/sign/status_update.py
+
+[Install]
+WantedBy=multi-user.target
