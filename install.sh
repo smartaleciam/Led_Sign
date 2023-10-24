@@ -289,6 +289,7 @@ clear   # clears the screen
 sudo ufw logging on
 echo "SIGN - Setting up firewall"
 sudo ufw allow 22
+sudo ufw allow 4200
 sudo ufw allow 8080
 sudo systemctl start ufw
 sudo ufw enable
