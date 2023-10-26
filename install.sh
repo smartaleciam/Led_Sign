@@ -288,11 +288,15 @@ clear   # clears the screen
 # Setting firewall
 sudo ufw logging on
 echo "SIGN - Setting up firewall"
-sudo ufw allow 22
-sudo ufw allow 4200
-sudo ufw allow 8080
+sudo ufw default deny incoming
+sudo ufw default deny outgoing
+sudo ufw allow 22/tcp
+sudo ufw allow 4200/tcp
+sudo ufw allow 8080/tcp
 sudo systemctl start ufw
 sudo ufw enable
+clear
+sudo ufw status
 
 echo "SIGN - Configuring shellinabox to use /var/tmp"
 echo "SHELLINABOX_DATADIR=/var/tmp/" >> /etc/default/shellinabox
