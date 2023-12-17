@@ -33,15 +33,16 @@ FTP_PASS = 'falcon'
 FTP_PORT = 22   # Use port 22 for FTPS
 ##################################################################
 # Set the log file location and log level
-log_file = '/home/smartalec/sign/logs/sign_system.log'  # Log to a file
-log_level = 'ERROR'
-logging.basicConfig(level=logging.ERROR)   # Adjust the log level as needed (e.g., INFO, DEBUG, WARNING, and ERROR.)
-file_handler = logging.FileHandler(log_file)
-file_handler.setLevel(log_level)
-formatter = logging.Formatter( '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-file_handler.setFormatter(formatter)
-logger = logging.getLogger()
-logger.addHandler(file_handler)
+#log_file = '/home/smartalec/sign/logs/sign_system.log'  # Log to a file
+#log_level = 'ERROR'
+#logging.basicConfig(level=logging.ERROR)   # Adjust the log level as needed (e.g., INFO, DEBUG, WARNING, and ERROR.)
+#file_handler = logging.FileHandler(log_file)
+#file_handler.setLevel(log_level)
+#formatter = logging.Formatter( '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+#file_handler.setFormatter(formatter)
+#logger = logging.getLogger()
+#logger.addHandler(file_handler)
+
 #tool.log = logging.getLogger()  # Redirect ftputil logging to the root logger
 ###################################################################
 app = Flask(__name__)
