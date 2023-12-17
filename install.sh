@@ -327,6 +327,7 @@ sudo systemctl enable mosquitto
 # Make sure /opt exists
 echo "SIGN - Checking for existence of /opt"
 cd /opt 2> /dev/null || mkdir /opt
+sudo chmod -R 777 /opt
 #######################################
 # Clone git repository
 cd /opt
@@ -339,7 +340,6 @@ if $clone_sign; then
         echo "SIGN - Removing old /opt/sign"
         rm -rf /opt/sign
     fi
-
     echo "SIGN - Cloning git repository"
     git clone https://github.com/smartaleciam/Led_Sign.git sign
     cd sign
