@@ -2,7 +2,7 @@
 
 # Led Trailer Sign Install Script
 SIGNBRANCH=${SIGNBRANCH:-"master"}
-SIGNIMAGEVER="2023-12-17"
+SIGNIMAGEVER="2023-12-18"
 SIGNCFGVER="1.2"
 SIGNPLATFORM="UNKNOWN"
 SIGNDIR=/opt/sign
@@ -377,20 +377,20 @@ sed -i -e "s/rotate .*/rotate 2/" /etc/logrotate.conf
 #######################################
 # Move all files to correct locations
 echo "SIGN - Moving Files to Correct locations"
-cp --recursive /opt/sign/etc/systemd/system/* /etc/systemd/system/
+sudo cp /opt/sign/etc/systemd/system/* /etc/systemd/system/
 
 cd /etc/ppp/gprs 2> /dev/null || mkdir /etc/ppp/gprs
-cp --recursive /opt/sign/etc/ppp/gprs/* /etc/ppp/gprs/
+sudo cp /opt/sign/etc/ppp/gprs/* /etc/ppp/gprs/
 
-#cp --recursive /opt/sign/etc/chatscripts/* /etc/chatscripts/
-cp --recursive /opt/sign/etc/update-motd.d/* /etc/update-motd.d/
-cp /opt/sign/etc/* /etc/
+#cp /opt/sign/etc/chatscripts/* /etc/chatscripts/
+sudo cp /opt/sign/etc/update-motd.d/* /etc/update-motd.d/
+sudo cp /opt/sign/etc/* /etc/
 
 cd ${SIGNHOME} 2> /dev/null || mkdir ${SIGNHOME}
-cp --recursive -R /opt/sign/sign/* ${SIGNHOME}/
+sudo cp -R /opt/sign/sign/* ${SIGNHOME}/
 
 cd /${SIGNHOME}/../sim7600g-h 2> /dev/null || sudo mkdir ${SIGNHOME}/../sim7600g-h
-cp --recursive -R /opt/sign/sim7600g-h/* ${SIGNHOME}/../sim7600g-h/
+sudo cp -R /opt/sign/sim7600g-h/* ${SIGNHOME}/../sim7600g-h/
 
 #######################################
 echo "SIGN - Enabling System Services"
