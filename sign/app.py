@@ -46,7 +46,7 @@ FTP_PORT = 22   # Use port 22 for FTPS
 #tool.log = logging.getLogger()  # Redirect ftputil logging to the root logger
 ###################################################################
 app = Flask(__name__)
-app.logger.addHandler(file_handler)
+#app.logger.addHandler(file_handler)
 app.config['SECRET_KEY'] = 'MontyPython_secret_key'
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['ALLOWED_EXTENSIONS'] = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}  # Define allowed file extensions
