@@ -2,7 +2,7 @@
 
 # Led Trailer Sign Install Script
 SIGNBRANCH=${SIGNBRANCH:-"master"}
-SIGNIMAGEVER="2023-10-30"
+SIGNIMAGEVER="2023-12-17"
 SIGNCFGVER="1.2"
 SIGNPLATFORM="UNKNOWN"
 SIGNDIR=/opt/sign
@@ -389,10 +389,10 @@ cp -R /opt/sign/sim7600g-h/* ${SIGNHOME}/../sim7600g-h/
 
 #######################################
 echo "SIGN - Enabling System Services"
-systemctl enable sign.service
-systemctl enable status_update.service
-systemctl start sign.service
-systemctl start status_update.service
+sudo systemctl enable sign.service
+sudo systemctl enable status_update.service
+sudo systemctl start sign.service
+sudo systemctl start status_update.service
 #######################################
 #echo "SIGN - Giving ${SIGNUSER} user sudo"
 #echo "${SIGNUSER} ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
