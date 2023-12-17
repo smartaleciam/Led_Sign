@@ -2,7 +2,7 @@
 
 # Led Trailer Sign Install Script
 SIGNBRANCH=${SIGNBRANCH:-"master"}
-SIGNIMAGEVER="2023-12-16"
+SIGNIMAGEVER="2023-12-18"
 SIGNCFGVER="1.2"
 SIGNPLATFORM="UNKNOWN"
 SIGNDIR=/opt/sign
@@ -258,15 +258,9 @@ fi
 
 echo "SIGN - Updating package list"
 apt-get update
-echo "SIGN - Upgrading apt if necessary"
 apt-get install --only-upgrade apt
-echo "SIGN - Sleeping 5 seconds to make sure any apt upgrade is quiesced"
-sleep 5
-echo "SIGN - Upgrading other installed packages"
 apt-get -y upgrade
 echo "SIGN - Cleanup caches"
-apt-get -y clean
-apt-get -y --purge autoremove
 apt-get -y clean
 
 # remove gnome keyring module config which causes pkcs11 warnings
@@ -274,7 +268,7 @@ apt-get -y clean
 rm -f /etc/pkcs11/modules/gnome-keyring-module
 
 echo "SIGN - Installing System packages"
-apt-get install mc python3-dev python3-pip python3-flask python3-ftputil vsftpd openssl shellinabox sudo git ppp minicom ufw libopenblas-dev unzip mosquitto mosquitto-clients logrotate -y
+sudo apt-get install mc python3-dev python3-pip python3-flask python3-ftputil vsftpd openssl shellinabox sudo git ppp minicom ufw libopenblas-dev unzip mosquitto mosquitto-clients logrotate -y
 echo "SIGN - Installing Camera Packages"
 sudo apt-get install build-essential cmake pkg-config libjpeg-dev libtiff5-dev libjasper-dev libpng-dev libavcodec-dev libavformat-dev libswscale-dev libv4l-dev libxvidcore-dev libx264-dev libfontconfig1-dev libcairo2-dev libgdk-pixbuf2.0-dev libpango1.0-dev libgtk2.0-dev libgtk-3-dev libatlas-base-dev gfortran libhdf5-dev libhdf5-serial-dev libhdf5-103 python3-pyqt5 python3-dev -y
 
@@ -285,7 +279,7 @@ echo "SIGN - Installing PIP Modules"
 pip3 install wheel Flask flask-socketio flask_fontawesome paho-mqtt python-gsmmodem mysql-connector pyserial psutil matplotlib gevent-websocket numpy ftputil eventlet pyftpdlib pyudev opencv-python
 
 #######################################
-clear   # clears the screen
+#clear   # clears the screen
 #######################################
 
 # Setting firewall
@@ -298,7 +292,7 @@ sudo ufw allow 4200/tcp
 sudo ufw allow 8080/tcp
 sudo systemctl start ufw
 #sudo ufw enable
-clear
+#clear
 sudo ufw status
 
 echo "SIGN - Configuring shellinabox to use /var/tmp"
