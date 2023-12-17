@@ -296,7 +296,7 @@ sudo ufw allow 22/tcp
 sudo ufw allow 4200/tcp
 sudo ufw allow 8080/tcp
 sudo systemctl start ufw
-sudo ufw enable
+#sudo ufw enable
 clear
 sudo ufw status
 
@@ -304,20 +304,20 @@ echo "SIGN - Configuring shellinabox to use /var/tmp"
 echo "SHELLINABOX_DATADIR=/var/tmp/" >> /etc/default/shellinabox
 sed -i -e "s/SHELLINABOX_ARGS.*/SHELLINABOX_ARGS=\"--no-beep -t\"/" /etc/default/shellinabox
 
-echo "SIGN - Disabling the VC4 OpenGL driver"
-sed -i -e "s/dtoverlay=vc4-fkms-v3d/#dtoverlay=vc4-fkms-v3d/" /boot/config.txt
-sed -i -e "s/dtoverlay=vc4-kms-v3d/#dtoverlay=vc4-kms-v3d/" /boot/config.txt
+#echo "SIGN - Disabling the VC4 OpenGL driver"
+#sed -i -e "s/dtoverlay=vc4-fkms-v3d/#dtoverlay=vc4-fkms-v3d/" /boot/config.txt
+#sed -i -e "s/dtoverlay=vc4-kms-v3d/#dtoverlay=vc4-kms-v3d/" /boot/config.txt
             
-echo "SIGN - Disabling Camera AutoDetect"
-sed -i -e "s/camera_auto_detect/#camera_auto_detect/" /boot/config.txt
+#echo "SIGN - Disabling Camera AutoDetect"
+#sed -i -e "s/camera_auto_detect/#camera_auto_detect/" /boot/config.txt
 
-echo "SIGN - Disabling fancy network interface names"
-sed -e 's/rootwait/rootwait net.ifnames=0 biosdevname=0/' /boot/cmdline.txt
+#echo "SIGN - Disabling fancy network interface names"
+#sed -e 's/rootwait/rootwait net.ifnames=0 biosdevname=0/' /boot/cmdline.txt
 
-echo "SIGN - Disabling Swap to save SD card"
-systemctl disable dphys-swapfile          
+#echo "SIGN - Disabling Swap to save SD card"
+#systemctl disable dphys-swapfile          
 
-dpkg-reconfigure --frontend=noninteractive locales
+#dpkg-reconfigure --frontend=noninteractive locales
 
 echo "SIGN - Setting up Mosquitto"
 sudo systemctl start mosquitto
