@@ -2,13 +2,14 @@
 
 # Led Trailer Sign Install Script
 SIGNBRANCH=${SIGNBRANCH:-"master"}
-SIGNIMAGEVER="2023-12-17"
+SIGNIMAGEVER="2023-12-16"
 SIGNCFGVER="1.2"
 SIGNPLATFORM="UNKNOWN"
 SIGNDIR=/opt/sign
 SIGNUSER=smartalec
 SIGNHOME=/home/${SIGNUSER}/sign
 OSVER="UNKNOWN"
+IP4=$(/sbin/ip -o -4 addr list eth0 | awk '{print $4}' | cut -d/ -f1)
 
 # Make sure the sbin directories are on the path as we will
 # need the adduser/addgroup/ldconfig/a2enmod/etc... commands
@@ -377,14 +378,19 @@ sed -i -e "s/rotate .*/rotate 2/" /etc/logrotate.conf
 # Move all files to correct locations
 echo "SIGN - Moving Files to Correct locations"
 cp /opt/sign/etc/systemd/system/* /etc/systemd/system/
+
 cd /etc/ppp/gprs 2> /dev/null || mkdir /etc/ppp/gprs
 cp /opt/sign/etc/ppp/gprs/* /etc/ppp/gprs/
+
 #cp /opt/sign/etc/chatscripts/* /etc/chatscripts/
 cp /opt/sign/etc/update-motd.d/* /etc/update-motd.d/
 cp /opt/sign/etc/logrotate.d/* /etc/logrotate.d/
 cp /opt/sign/etc/* /etc/
+
 cd ${SIGNHOME} 2> /dev/null || mkdir ${SIGNHOME}
 cp -R /opt/sign/sign/* ${SIGNHOME}/
+
+cd /${SIGNHOME}/../sim7600g-h 2> /dev/null || sudo mkdir ${SIGNHOME}/../sim7600g-h
 cp -R /opt/sign/sim7600g-h/* ${SIGNHOME}/../sim7600g-h/
 
 #######################################
@@ -407,7 +413,7 @@ echo "Finished: ${ENDTIME}"
 echo "========================================================="
 echo "Welcome ${SIGNUSER}, Please Reboot"
 echo "by running the reboot command."
-#echo ""
+echo "Ip Address: ${IP4}"
 #echo "su - ${SIGNUSER}"
 #echo "sudo shutdown -r now"
 #echo ""
