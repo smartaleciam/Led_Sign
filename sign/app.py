@@ -8,7 +8,7 @@ import eventlet
 import psutil
 import matplotlib.pyplot as plt
 import base64
-#import cv2
+import cv2
 import paho.mqtt.client as mqtt
 import os
 import logging
@@ -21,7 +21,7 @@ from io import BytesIO
 from flask_fontawesome import FontAwesome
 
 #################################################################
-#cap = cv2.VideoCapture(0)  # Use the appropriate camera index (0 for the default camera)
+cap = cv2.VideoCapture(0)  # Use the appropriate camera index (0 for the default camera)
 
 ##################################################################
 # Set the IP address of the FPP system to control
