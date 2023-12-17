@@ -309,10 +309,10 @@ sed -i -e "s/SHELLINABOX_ARGS.*/SHELLINABOX_ARGS=\"--no-beep -t\"/" /etc/default
 #echo "SIGN - Disabling fancy network interface names"
 #sed -e 's/rootwait/rootwait net.ifnames=0 biosdevname=0/' /boot/cmdline.txt
 
-#echo "SIGN - Disabling Swap to save SD card"
-#systemctl disable dphys-swapfile          
+echo "SIGN - Disabling Swap to save SD card"
+systemctl disable dphys-swapfile          
 
-#dpkg-reconfigure --frontend=noninteractive locales
+dpkg-reconfigure --frontend=noninteractive locales
 
 echo "SIGN - Setting up Mosquitto"
 sudo systemctl start mosquitto
