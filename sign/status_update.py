@@ -192,7 +192,7 @@ def handle_connect():
 ################################################################
 
 if __name__ == '__main__':
-	socketio.start_background_task(update_stats)
+#	socketio.start_background_task(update_stats)
 	eventlet.monkey_patch()
 	print('- Data Server Started')
 	socketio.run(app, host='0.0.0.0', port=8046)
