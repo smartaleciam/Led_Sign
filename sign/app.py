@@ -36,7 +36,7 @@ FTP_PORT = 22   # Use port 22 for FTPS
 log_file = '/home/smartalec/sign/logs/sign_system.log'  # Log to a file
 log_level = 'ERROR'
 logging.basicConfig(level=logging.ERROR)   # Adjust the log level as needed (e.g., INFO, DEBUG, WARNING, and ERROR.)
-sudo file_handler = logging.FileHandler(log_file)
+file_handler = logging.FileHandler(log_file)
 file_handler.setLevel(log_level)
 formatter = logging.Formatter( '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 file_handler.setFormatter(formatter)
