@@ -1,0 +1,8 @@
+2023-10-24 20:33:38,780 - engineio.server - ERROR - http://192.168.1.140:8080 is not an accepted origin. (further occurrences of this error will be logged with level INFO)
+2023-10-24 20:34:09,970 - engineio.server - ERROR - http://192.168.1.140:8080 is not an accepted origin. (further occurrences of this error will be logged with level INFO)
+2023-10-24 20:40:47,002 - engineio.server - ERROR - http://192.168.1.140:8080 is not an accepted origin. (further occurrences of this error will be logged with level INFO)
+2023-10-25 05:05:33,723 - engineio.server - ERROR - http://192.168.1.140:8080 is not an accepted origin. (further occurrences of this error will be logged with level INFO)
+2023-11-12 18:30:34,534 - engineio.server - ERROR - Invalid session VQkxkgOPXpwFvat6AAAA (further occurrences of this error will be logged with level INFO)
+2023-11-12 18:34:06,198 - engineio.server - ERROR - Invalid session fju0hP7IvnqjZJOHAAAC (further occurrences of this error will be logged with level INFO)
+2023-11-12 18:37:36,654 - engineio.server - ERROR - Invalid session NjYX3IApq4wGfb56AAAY (further occurrences of this error will be logged with level INFO)
+2023-12-09 08:16:22,043 - engineio.server - ERROR - Invalid session -5aHubmX4JgngiyJAAAA (further occurrences of this error will be logged with level INFO)

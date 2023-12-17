@@ -8,18 +8,20 @@ import eventlet
 import psutil
 import matplotlib.pyplot as plt
 import base64
+#import cv2
 import paho.mqtt.client as mqtt
 import os
 import logging
 import requests
-import paramiko
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask_socketio import SocketIO, send, emit
 from ftplib import FTP, FTP_TLS
 from ftputil import FTPHost, session, tool
 from io import BytesIO
 from flask_fontawesome import FontAwesome
-#from gsmmodem import GsmModem
+
+#################################################################
+#cap = cv2.VideoCapture(0)  # Use the appropriate camera index (0 for the default camera)
 
 ##################################################################
 # Set the IP address of the FPP system to control
@@ -31,7 +33,7 @@ FTP_PASS = 'falcon'
 FTP_PORT = 22   # Use port 22 for FTPS
 ##################################################################
 # Set the log file location and log level
-log_file = '/home/smartalec/sign/logs/socketio.log'  # Log to a file
+log_file = '/home/smartalec/sign/logs/sign_system.log'  # Log to a file
 log_level = 'ERROR'
 logging.basicConfig(level=logging.ERROR)   # Adjust the log level as needed (e.g., INFO, DEBUG, WARNING, and ERROR.)
 file_handler = logging.FileHandler(log_file)
@@ -50,6 +52,7 @@ app.config['ALLOWED_EXTENSIONS'] = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}  
 app.config['MAX_FILE_SIZE'] = 10 * 1024 * 1024  # 10 MB max file size
 #socketio = SocketIO(app, async_mode='gevent')  # Use Gevent async mode
 socketio = SocketIO(app)
+#socketio = SocketIO(app, cors_allowed_origins=[ http://192.168.1.140 ])
 fa = FontAwesome(app)
 ####################################################################
 def allowed_file(filename):
@@ -65,10 +68,6 @@ senPIRSts = GPIO.LOW
 # Set button and PIR sensor pins as an input
 GPIO.setup(button, GPIO.IN)
 GPIO.setup(senPIR, GPIO.IN)
-########################################################################
-# Initialize the SIM7600G-H modem
-#modem = GsmModem('/dev/ttyUSB2')  # Replace with the correct serial port
-#modem.connect()
 
 ##########################################################################
 # MQTT configuration
@@ -141,6 +140,15 @@ def getDiskSpace():
         if i==2:
             return(line.split()[1:5])
 
+def get_network_speed():
+    # Get the current network usage in bytes per second
+    network_speed_up = psutil.net_io_counters().bytes_recv
+    network_speed_down = psutil.net_io_counters().bytes_sent
+    time.sleep(1)
+    incoming_speed = psutil.net_io_counters().bytes_recv - network_speed_up
+    outgoing_speed = psutil.net_io_counters().bytes_sent - network_speed_down
+    return incoming_speed, outgoing_speed
+
 def update_stats():
     while True:
         current_time = datetime.datetime.utcnow().strftime('%H:%M:%S')
@@ -161,7 +169,8 @@ def update_stats():
             battery_voltage = "N/A"
         socketio.emit('batt_volt', battery_voltage)
         socketio.emit('batt_percent', battery_percent)
-
+        speed_up, speed_down = get_network_speed()
+        socketio.emit('speed', {'speed_up': speed_up,'speed_down': speed_down} )
         socketio.sleep(1)  # Emit updates every second
 
 ################################################################
@@ -214,6 +223,15 @@ def home():
         'chart_base64'  : chart_base64
      }
     return render_template('index.html', **templateData)
+
+def gen():
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            break
+        _, buffer = cv2.imencode('.jpg', frame)
+        jpg_as_text = base64.b64encode(buffer).decode('utf-8')
+        yield f'data:image/jpeg;base64,{jpg_as_text}'
 
 @app.route('/get_firewall_status')
 def get_firewall_status():
@@ -319,7 +337,17 @@ def ftp_upload():
 def handle_connect():
     client_ip = request.remote_addr
     print(client_ip,' - Connected')
+    emit('stream', {'data': 'Connected'})
+    
+@socketio.on('disconnect')
+def handle_disconnect():
+    client_ip = request.remote_addr
+    print(client_ip,' - Disconnected')
 
+@socketio.on('stream')
+def handle_connect():
+    emit('stream', {'data': 'Connected'})
+ 
 @socketio.on('send_fpp')
 def handle_command(data):
     command = data['command']

@@ -5,9 +5,18 @@
          ... (rest of your form) 
     </form>
 -->
-
+<table>
+<tr>
+<td>
 <!-- Display A map with the latest GPS -->
 <div id="map" style="height: 300px; width:400px;"></div>
+</td><td>
+<img id="webcam-stream" src="" alt="Webcam Stream">
+</td>
+</tr>
+</table>
+
+<p> GPS Location : <p id="gps_location">loading...</p></p>
 <!-- Display the Fire Wall Status and Attacks -->
     <hr>
     <h2>Firewall Status</h2>
@@ -26,18 +35,20 @@
     <h1>Real-time MQTT Signals</h1>
     <textarea id="mqtt-data" name="Recived MQTT" rows="4" cols="80"></textarea>
     <br>
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
-     <script type="text/javascript">
+ <script type="text/javascript">
         var socket = io.connect('http://' + document.domain + ':' + location.port);
 
         socket.on('mqtt_data', function(data) {
             var mqttDataDiv = document.getElementById('mqtt-data');
             mqttDataDiv.innerHTML += data + "<br>";
         });
-    </script>
+        socket.on('stream', function (data) {
+            console.log(data.data);
+            document.getElementById('webcam-stream').src = data.data;
+        });
 
-<script>
-    // ***********************Map section ******************************    
+        
+        // ***********************Map section ******************************    
         var map = L.map('map').setView([-35.1402308,139.2871538], 15); // Initialize map with default coordinates and zoom level
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map); // Use OpenStreetMap tiles
     
@@ -97,6 +108,6 @@
        updateGPSLocations(); // Initial update
        updateStatus(); // Initial update
        updateAttacks(); // Initial update
-   </script>
+</script>
 </body>
 </html>

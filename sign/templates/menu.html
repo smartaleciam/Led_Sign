@@ -8,12 +8,13 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='notifications.css') }}">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
     <script src="{{ url_for('static', filename='notifications.js') }}"></script>
+    <script src="{{ url_for('static', filename='system_updates.js') }}"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
 <ul class="menu-bar1">
-  <lii id="led_status1" class="red led"></lii>  <!-- status led for the sim7600 data stream -->
-  <lii id="led_status" class="red led"></lii>  <!-- status led for the Main Web Page -->
+  <lii id="led_status1" class="red led"></lii>  <!-- Status led for the Sim7600 data stream -->
+  <lii id="led_status" class="red led"></lii>  <!-- Status led for the Main MenuBar Stats -->
   <lii>Signal:
     <span class="fa fa-1x fa-signal"></span>    <!-- Full signal -->
     <span class="fa fa-1x inactive fa-signal"></span>   <!-- No signal -->
@@ -28,6 +29,7 @@
 
     <lii class="fa fa-thermometer-half">&nbsp&nbsp Cpu Temp: <i id="cpu_temp"></i>c</lii>
     <lii class="fas fa-microchip">&nbsp&nbsp Cpu Load: <i id="cpu_usage"></i>%</lii>
+    <lii>&nbsp&nbsp Speed up/down : <li class="fa fa-long-arrow-up" id="speed_up"></li> - <li class="fa fa-long-arrow-down"><i id="speed_down"></i></li></lii>
 </ul>
 
   <ul class="menu-bar">
@@ -40,9 +42,10 @@
     <li><a href="/ftp_upload">FTP Upload</a></li>
     <li><a href="/ftp_directory">FTP Dir</a></li>
     <script type="text/javascript">
-      function shell() {    window.open('http://192.168.1.140:4200', '_blank');        }            // Use JavaScript to open a new page in a new tab or window
+      function shell() {    window.open('http://192.168.1.111:4200', '_blank');        }            // Use JavaScript to open a new page in a new tab or window
     </script>
 </ul>
+
 <!--
 
 <div class="invert">
@@ -68,36 +71,6 @@
   </div>
 -->
 
-
-<script src="{{ url_for('static', filename='system_updates.js') }}"></script>
-
-<script type="text/javascript">
-        var socket = io.connect('http://' + document.domain + ':' + location.port);
-        socket.on('connect', function() {     var statusElement = document.getElementById('led_status');    statusElement.className = 'green led';   });
-
-        socket.on('update_time', function(data) {   
-          var utcTime = new Date(data + ' UTC');  // Parse UTC time
-          var localTime = utcTime.toLocaleTimeString();  // Convert to local time
-          document.getElementById('s_time').textContent = data;
-        });
-        socket.on('cpu_temp', function(data) {   document.getElementById('cpu_temp').textContent = data;   });
-        socket.on('cpu_usage', function(data) {   document.getElementById('cpu_usage').textContent = data;   });
-        socket.on('disk_free', function(data) {   document.getElementById('disk_free').textContent = data;   });
-        socket.on('batt_volt', function(data) {   document.getElementById('batt_volt').textContent = data;   });
-        socket.on('batt_percent', function(data) {   document.getElementById('batt_percent').textContent = data;   });
-
-        socket.on('disconnect', function(reason) {
-          console.log('Connection has been disconnected.', reason);
-          if (reason === 'ping timeout') {     var statusElement = document.getElementById('led_status');    statusElement.className = 'orange led';   }
-          if (reason === 'transport close') {      var statusElement = document.getElementById('led_status');    statusElement.className = 'red led';    }
-        });
- 
-        socket.on('reconnect', function() {
-          var statusElement = document.getElementById('led_status');
-          statusElement.className = 'green led';   
-          console.log('Connection has been reestablished.');
-        });
-</script>
 
 
 <svg display="none">
